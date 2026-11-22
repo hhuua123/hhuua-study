@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>锈岛求生 · 给 Python 玩家的 Rust 入门课 · Hhuua的自习室</title>
+<meta name="description" content="写给 Python 玩家的 Rust 基础入门课：说人话、处处对照、做题拿徽章。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦀</text></svg>">
+<link rel="stylesheet" href="style.css?v=0c0db6f4d8b1">
+</head>
+<body>
+<noscript><p style="padding:20px;text-align:center">这门课需要开启 JavaScript 才能玩起来 🦀</p></noscript>
+
+<!-- ══════════ Ferris 画本体(供复用) ══════════ -->
+<svg width="0" height="0" style="position:absolute">
+<defs>
+<g id="ferrisArt">
+  <!-- 腿 -->
+  <g fill="none" stroke="#d64400" stroke-width="9" stroke-linecap="round">
+    <path d="M72 130 Q58 152 40 156"/>
+    <path d="M96 140 Q92 160 78 166"/>
+    <path d="M148 130 Q162 152 180 156"/>
+    <path d="M124 140 Q128 160 142 166"/>
+  </g>
+  <!-- 手臂 -->
+  <g fill="none" stroke="#e64500" stroke-width="11" stroke-linecap="round">
+    <path d="M58 96 Q36 84 30 58"/>
+    <path d="M162 96 Q184 84 190 58"/>
+  </g>
+  <!-- 钳子 -->
+  <circle cx="30" cy="44" r="19" fill="#f74c00"/>
+  <circle cx="19" cy="31" r="7.5" fill="#f74c00"/>
+  <circle cx="190" cy="44" r="19" fill="#f74c00"/>
+  <circle cx="201" cy="31" r="7.5" fill="#f74c00"/>
+  <!-- 身体 -->
+  <ellipse cx="110" cy="100" rx="62" ry="47" fill="#f74c00"/>
+  <ellipse cx="110" cy="115" rx="44" ry="26" fill="#ff7d3a"/>
+  <!-- 眼睛 -->
+  <circle cx="88" cy="82" r="13" fill="#fff"/>
+  <circle cx="132" cy="82" r="13" fill="#fff"/>
+  <circle cx="91" cy="84" r="5.5" fill="#231408"/>
+  <circle cx="129" cy="84" r="5.5" fill="#231408"/>
+  <circle cx="93" cy="82" r="1.8" fill="#fff"/>
+  <circle cx="131" cy="82" r="1.8" fill="#fff"/>
+  <!-- 笑 -->
+  <path d="M97 112 Q110 122 123 112" fill="none" stroke="#5a2a10" stroke-width="4" stroke-linecap="round"/>
+</g>
+</defs>
+</svg>
+
+<!-- ══════════ 顶栏 ══════════ -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="shelf-back" href="/" aria-label="返回专题书架，Hhuua的自习室">
+      <img src="https://blog.hhuua.xyz/assets/logo.png" width="24" height="24" alt="">
+      <span>← 返回专题书架</span>
+    </a>
+    <div class="brand">
+      <svg class="brand-logo" viewBox="14 10 192 160"><use href="#ferrisArt"/></svg>
+      <div class="brand-text">
+        <b>锈岛求生</b>
+        <span>Rust 入门 · Python 玩家专线</span>
+      </div>
+    </div>
+    <div class="hud">
+      <span class="hud-lv" id="lvlTitle">Lv1 海滩游客</span>
+      <div class="xp-track"><i id="xpFill"></i></div>
+      <span class="hud-xp" id="xpText">0 XP</span>
+      <span class="hud-ch" id="chProgress">0/7 章</span>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <!-- ══════════ 侧边栏 ══════════ -->
+  <aside class="sidebar">
+    <div class="side-title">🗺 冒险地图</div>
+    <nav id="chapterNav"></nav>
+    <div class="side-title">🏅 徽章收藏 <span id="badgeCount"></span></div>
+    <div id="badgeWall"></div>
+    <button id="btnReset" class="reset-btn" title="清空进度，从登岛重新开始">↺ 重新开始</button>
+  </aside>
+
+  <main id="main">
+
+  <!-- ══════════ 序章 ══════════ -->
+  <section class="chapter" id="intro">
+    <div class="hero">
+      <div class="hero-copy">
+        <div class="hero-kicker">写给 Python 玩家的 Rust 入门课</div>
+        <h1 class="hero-title">锈岛求生 🦀</h1>
+        <p class="hero-p">你有 Python 底子，这门课就简单了一半——变量、函数、循环你全都会。剩下的另一半，是 Rust 的「规矩」。这门课共三部：<b>基础岛 13 站 → 进阶群岛 8 站 → 实战大陆 7 关</b>，全程说人话，最后做 5 个真项目毕业。</p>
+        <div class="hero-chips">
+          <span>📖 概念说人话</span>
+          <span>🐍↔🦀 处处对照 Python</span>
+          <span>🎮 做题攒 XP 拿徽章</span>
+          <span>🛠 项目实战·真代码</span>
+        </div>
+      </div>
+      <div class="hero-ferris"><svg viewBox="0 0 220 175"><use href="#ferrisArt"/></svg></div>
+    </div>
+
+    <div class="card">
+      <h3 class="sec-title">为什么值得学 Rust？</h3>
+      <div class="grid2">
+        <div class="feat"><h4>⚡ 快得离谱</h4><p>编译成机器码，性能逼近 C/C++。Python 是解释器在后面追着跑，Rust 是 CPU 直接跑。</p></div>
+        <div class="feat"><h4>🛡 内存零事故</h4><p>不靠垃圾回收器，靠「所有权」规则在编译期就把内存问题掐死在摇篮里。江湖传言：编译通过，基本就没有内存 bug。</p></div>
+        <div class="feat"><h4>🧵 多线程福星</h4><p>数据竞争？编译器直接拒绝你。Python 的 GIL 在这里根本不存在。</p></div>
+        <div class="feat"><h4>🌍 硬核玩家都在用</h4><p>Firefox、Linux 内核、微软、亚马逊、Discord……最吃性能的地方都有它的身影。</p></div>
+      </div>
+      <p class="card-note">一句话总结：<b>Python 教你把事做成，Rust 教你把事做得又对又快。</b>先 Python 后 Rust，是目前最顺的升级路线之一。</p>
+    </div>
+
+    <div class="card">
+      <h3 class="sec-title">🐍→🦀 速查表：Python 佬秒懂</h3>
+      <table class="cmp-table">
+        <tr><th>你在 Python 写</th><th>Rust 里写</th></tr>
+        <tr><td><code class="ic">def f(x):</code></td><td><code class="ic">fn f(x: i32) { }</code></td></tr>
+        <tr><td><code class="ic">True / False</code></td><td><code class="ic">true / false</code>（全小写）</td></tr>
+        <tr><td><code class="ic">None</code></td><td>先不管（以后是 Option&lt;T&gt;）</td></tr>
+        <tr><td><code class="ic">pass</code></td><td><code class="ic">{ }</code>（空大括号）</td></tr>
+        <tr><td><code class="ic">while True:</code></td><td><code class="ic">loop { }</code></td></tr>
+        <tr><td><code class="ic">for i in range(5):</code></td><td><code class="ic">for i in 0..5 { }</code></td></tr>
+        <tr><td><code class="ic">f"x = {x}"</code></td><td><code class="ic">println!("x = {x}")</code></td></tr>
+        <tr><td>缩进表示层级</td><td>大括号表示层级</td></tr>
+        <tr><td><code class="ic">x: int = 1</code>（类型是建议）</td><td><code class="ic">let x: i32 = 1;</code>（类型是法律）</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3 class="sec-title">这门课怎么玩？</h3>
+      <ol class="howto">
+        <li>每章先用人话讲概念，再拿 Python 对照，一眼看出差别。</li>
+        <li>代码块右上角的 <b>▶ 运行</b> 可以直接看结果；写错的代码会配一个 <b>🔍 编译器怎么说</b>——Rust 的报错出了名的贴心，经常把改法直接贴给你，看它骂人是学 Rust 最快的姿势。</li>
+        <li>完成章节里的动手练习与章末快问快答，即可解锁下一章。「提交批改」在浏览器检查要点。「运行 Rust」会将待运行代码发送给官方 Rust Playground，输出和编译错误会显示在题目下方。</li>
+        <li>攒 XP 升级：<b>海滩游客 → 拾贝学徒 → 螃蟹骑士 → 锈岛常客 → 基础岛居民 → 群岛水手 → 航海家 → 铁锈猎人 → 实战指挥官 → Rustacean</b>（10 级封顶）。</li>
+        <li>实战示例可在新标签页打开<b>官方 Rust Playground</b>，编辑后点 Run 即可编译运行。网络服务和终端交互项目请在自己的电脑上运行。</li>
+      </ol>
+      <div class="tip">🧪 <b>现在就能动手：</b>打开 <a href="https://play.rust-lang.org" target="_blank" rel="noopener">Rust Playground</a>，把教程里的代码贴进去就能跑，什么都不用装。（讲解区的「▶ 运行」是教学模拟，练习区的「运行 Rust」会实际编译和运行。）</div>
+    </div>
+
+    <div class="quiz-zone" data-quiz="intro"></div>
+    <div class="ch-banner" hidden></div>
+    <div class="ch-nav">
+      <span></span>
+      <button class="btn ghost nav-next" data-goto="ch1">开始第 1 章 →</button>
+    </div>
+  </section>
+
+  <!-- ══════════ 第 1 章 · 变量 ══════════ -->
+  <section class="chapter" id="ch1">
+    <div class="ch-head">
+      <div class="ch-eyebrow">第 1 章 · 徽章待领：📦 封条管理员</div>
+      <h2>变量：默认贴了封条的盒子</h2>
+    </div>
+    <p class="lead">先报个好消息：<code class="ic">let</code> 这语法你扫一眼就懂。再报个坏消息：它背后藏着一条 Python 里完全没有的规矩——<b>默认不许改</b>。</p>
+
+    <h3 class="sec-title">一样的开始，不一样的下场</h3>
+    <p>两边都在创建变量、然后改它。Python 潇洒通过，Rust 当场翻脸：</p>
+    <div class="code-compare">
+      <div class="code-box py">
+        <div class="code-lang"><span>🐍 Python</span></div>
+<pre><code data-lang="python">name = "Ferris"
+name = "小蟹"    # 随手覆盖，没人管你
+print(name)</code></pre>
+      </div>
+      <div class="code-box rust">
+        <div class="code-lang"><span>🦀 Rust</span><button class="btn-run err" data-err="ch1-imm">🔍 编译器怎么说？</button></div>
+<pre><code data-lang="rust">let name = "Ferris";
+name = "小蟹";    // ❌ 编译不过！</code></pre>
+        <div class="console" hidden></div>
+      </div>
+    </div>
+    <p class="compare-note">看到了吗？这不是 bug，是 Rust 的哲学：<b>「不可变」是默认值</b>。</p>
+
+    <div class="concept">
+      <h4>🤔 为什么默认不许改？</h4>
+      <p>把 Rust 的变量想象成一个盒子：<code class="ic">let</code> 就是「装东西进去」，默认还会<b>贴上封条</b>——谁都不许改里面的东西。想改？必须声明的时候就写 <code class="ic">let mut</code>（mut = mutable，可变）。</p>
+      <p>这规矩乍看很烦，其实是保命的：读代码的人（包括三个月后的你）只要看到 <code class="ic">let x = …</code> 且没有 mut，就敢拍胸脯说「x 从头到尾没变过」。Python 里你敢这么保证吗？大项目、多线程场景下，这条默认规矩能救命。</p>
+    </div>
+
+    <h3 class="sec-title">修复：加个 mut，撕掉封条</h3>
+    <div class="code-box">
+      <div class="code-lang"><span>🦀 Rust</span><button class="btn-run" data-run="ch1-fix">▶ 运行</button></div>
+<pre><code data-lang="rust">fn main() {
+    let mut name = "Ferris";   // mut = 允许修改
+    name = "小蟹";              // 现在可以改了
+    println!("{name}");
+}</code></pre>
+      <div class="console" hidden></div>
+    </div>
+    <p class="compare-note">注意：<b>mut 只在声明时写一次</b>，之后修改不用再写。</p>
+    <div class="tip">📍 Rust 程序从 <code class="ic">fn main()</code> 开始执行，就像 Python 脚本从第一行开始跑。教程里的完整例子都会带上它。</div>
+
+    <h3 class="sec-title">彩蛋：遮蔽（Shadowing）——同名的「新盒子」</h3>
+    <p>还有个容易懵的操作：用 <code class="ic">let</code> 再声明一个同名变量。这不叫「修改」，叫<b>「新盒子顶掉旧盒子」</b>：</p>
+    <div class="code-box">
+      <div class="code-lang"><span>🦀 Rust</span><button class="btn-run" data-run="ch1-shadow">▶ 运行</button></div>
+<pre><code data-lang="rust">fn main() {
+    let x = 5;
+    let x = x + 1;    // 新盒子顶掉旧盒子（shadowing）
+    let x = x * 2;
+    println!("{x}");  // 12
+}</code></pre>
+      <div class="console" hidden></div>
+    </div>
+    <p class="compare-note">它和 Python 的覆盖赋值神似，但有个 Python 做不到的玩法：<b>新盒子可以换类型</b>（比如从字符串盒子换成数字盒子）。处理「同一份数据的不同形态」时特别顺手。现在记住有这回事就行。</p>
+
+    <div class="takeaway">
+      <div class="tk-title">🎯 本章要点</div>
+      <ul>
+        <li><code class="ic">let</code> 创建变量，<b>默认不可变</b>（immutable）</li>
+        <li><code class="ic">let mut</code> 才是可以打开的盒子</li>
+        <li>想要「新值顶掉旧值」→ 用 <code class="ic">let</code> 再声明一次（shadowing）</li>
+        <li>换来的好处：代码更可预测，多线程更安全</li>
+      </ul>
+    </div>
+
+    <div class="quiz-zone" data-quiz="ch1"></div>
+    <div class="ch-banner" hidden></div>
+    <div class="ch-nav">
+      <button class="btn ghost nav-prev" data-goto="intro">← 上一章</button>
+      <button class="btn ghost nav-next" data-goto="ch2">下一章 →</button>
+    </div>
+  </section>
+
+  <!-- ══════════ 第 2 章 · 类型 ══════════ -->
+  <section class="chapter" id="ch2">
+    <div class="ch-head">
+      <div class="ch-eyebrow">第 2 章 · 徽章待领：🔍 类型侦探</div>
+      <h2>数据类型：Rust 的强制体检</h2>
+    </div>
+    <p class="lead">Python 的变量是万能口袋，今天装数字明天装字符串，谁也管不着。Rust 的每个变量<b>出厂就带类型铭牌</b>。好消息：大部分时候编译器自动帮你猜（类型推断），用起来还是顺滑的；坏消息：一旦定下，就是铁律。</p>
+
+    <h3 class="sec-title">类型对照：老熟人都有新名字</h3>
+    <table class="cmp-table">
+      <tr><th>你在 Python 写</th><th>Rust 里叫</th><th>备注</th></tr>
+      <tr><td><code class="ic">int</code></td><td><code class="ic">i32</code>（默认）/ i64 / u8…</td><td>i 系列 = 有符号；u 系列 = 只装非负数</td></tr>
+      <tr><td><code class="ic">float</code></td><td><code class="ic">f64</code>（默认）/ f32</td><td>f64 = 双精度浮点</td></tr>
+      <tr><td><code class="ic">bool</code></td><td><code class="ic">bool</code></td><td>值是<b>小写</b> true / false</td></tr>
+      <tr><td><code class="ic">str</code></td><td><code class="ic">&amp;str</code> 和 <code class="ic">String</code></td><td>两种字符串！第 5 章有它的戏份</td></tr>
+      <tr><td>（没有字符类型）</td><td><code class="ic">char</code></td><td>单引号，'a'、'中'、'🦀' 都算一个</td></tr>
+    </table>
+
+    <h3 class="sec-title">第一条铁律：单引号 ≠ 双引号</h3>
+    <p>Python 里 <code class="ic">'hi'</code> 和 <code class="ic">"hi"</code> 随便换。Rust 里这俩是不同物种：<b>单引号只能装「一个字符」（char），双引号装「字符串」</b>。</p>
+    <div class="code-box">
+      <div class="code-lang"><span>🦀 Rust</span><button class="btn-run err" data-err="ch2-char">🔍 编译器怎么说？</button></div>
+<pre><code data-lang="rust">let a = 'x';     // ✅ 一个字符，合法
+let b = "hi";    // ✅ 字符串，双引号
+let c = 'hi';    // ❌ 俩字符塞进单引号？编译器不答应</code></pre>
+      <div class="console" hidden></div>
+    </div>
+    <p class="compare-note">彩蛋：<code class="ic">'🦀'</code> 是合法的！emoji 再大也算一个 Unicode 字符。字符串永远用双引号。</p>
+
+    <h3 class="sec-title">第二条铁律：绝不偷偷帮你转换类型</h3>
+    <p>Python 很「贴心」：<code class="ic">1 + 2.5</code> 偷偷帮你算成 3.5。Rust 觉得偷偷摸摸是不对的：整数和浮点是两种类型，不许直接混算。</p>
+    <div class="code-box">
+      <div class="code-lang"><span>🦀 Rust</span><button class="btn-run err" data-err="ch2-mix">🔍 编译器怎么说？</button></div>
+<pre><code data-lang="rust">fn main() {
+    let a = 1;       // 推断为 i32
+    let b = 2.5;     // 推断为 f64
+    let c = a + b;    // ❌ 不许 i32 + f64！
+}</code></pre>
+      <div class="console" hidden></div>
+    </div>
+    <p>想变身？必须当面说清楚 <code class="ic">as</code>：</p>
+    <div class="code-box">
+      <div class="code-lang"><span>🦀 Rust</span><button class="btn-run" data-run="ch2-cast">▶ 运行</button></div>
+<pre><code data-lang="rust">fn main() {
+    let a = 1;              // i32
+    let b = 2.5;            // f64
+    let c = a as f64 + b;   // 明说：把 a 当 f64 用
+    println!("{c}");
+}</code></pre>
+      <div class="console" hidden></div>
+    </div>
+    <p class="compare-note">「麻烦」换来的好处：永远不会出现 Python 里 <code class="ic">1 + "1"</code> 到底是 2 还是 "11" 的类型悬疑剧。类型要变，必须明说。</p>
+
+    <h3 class="sec-title">第三条：布尔值全小写</h3>
+    <div class="code-compare">
+      <div class="code-box py">
+        <div class="code-lang"><span>🐍 Python</span></div>
+<pre><code data-lang="python">ok = True       # 首字母大写
+if ok:
+    print("好嘞")</code></pre>
+      </div>
+      <div class="code-box rust">
+        <div class="code-lang"><span>🦀 Rust</span><button class="btn-run" data-run="ch2-bool">▶ 运行</button></div>
+<pre><code data-lang="rust">fn main() {
+    let ok = true;    // 全小写！
+    if ok {
+        println!("好嘞");
+    }
+}</code></pre>
+        <div class="console" hidden></div>
+      </div>
+    </div>
+    <p class="compare-note">顺手预告：Rust 的 if 条件必须是<b>货真价实的 bool</b>，<code class="ic">if 1 { }</code> 这种「非零即真」的偷懒写法直接编译报错（下一章细讲）。</p>
+
+    <div class="takeaway">
+      <div class="tk-title">🎯 本章要点</div>
+      <ul>
+        <li>数字默认 <code class="ic">i32</code> / <code class="ic">f64</code>，布尔是<b>小写</b> true / false</li>
+        <li>单引号 = 一个字符 char；双引号 = 字符串</li>
+        <li>Rust 绝不偷偷转换类型，要转就写 <code class="ic">as</code></li>
+        <li><code class="ic">let x: i32 = 42;</code> 的类型标注是<b>法律</b>，不是 Python 那种建议</li>
+      </ul>
+    </div>
+
+    <div class="quiz-zone" data-quiz="ch2"></div>
+    <div class="ch-banner" hidden></div>
+    <div class="ch-nav">
+      <button class="btn ghost nav-prev" data-goto="ch1">← 上一章</button>
+      <button class="btn ghost nav-next" data-goto="ch3">下一章 →</button>
+    </div>
+  </section>
+
+  <!-- ══════════ 第 3 章 · 函数 ══════════ -->
+  <section class="chapter" id="ch3">
+    <div class="ch-head">
+      <div class="ch-eyebrow">第 3 章 · 徽章待领：🛠 函数工头</div>
+      <h2>函数：每个工人都要签合同</h2>
+    </div>
+    <p class="lead">写 Python 函数，类型提示是「礼貌」，不写也能跑。写 Rust 函数，类型是「合同」——不签不让你开工，而且编译器全程盯着你履约。</p>
+
+    <h3 class="sec-title">解剖一个 Rust 函数</h3>
+    <div class="code-compare">
+      <div class="code-box py">
+        <div class="code-lang"><span>🐍 Python</span></div>
+<pre><code data-lang="python">def add(a, b):
+    return a + b
+
+print(add(1, 2))</code></pre>
+      </div>
+      <div class="code-box rust">
+        <div class="code-lang"><span>🦀 Rust</span><button class="btn-run" data-run="ch3-add">▶ 运行</button></div>
+<pre><code data-lang="rust">fn add(a: i32, b: i32) -> i32 {
+    a + b
+}
+
+fn main() {
+    println!("{}", add(1, 2));
+}</code></pre>
+        <div class="console" hidden></div>
+      </div>
+    </div>
+    <ul class="points">
+      <li><code class="ic">fn</code> ≈ <code class="ic">def</code></li>
+      <li><code class="ic">a: i32</code> —— 每个参数<b>必须标类型</b>，没有商量</li>
+      <li><code class="ic">-&gt; i32</code> —— 返回类型，也是合同的一部分</li>
+      <li><code class="ic">a + b</code> —— 最后一行<b>不带分号</b>，就是返回值（下面马上讲这个魔法）</li>
+    </ul>
+
+    <h3 class="sec-title">分号的哲学：最后一行 = 返回值</h3>
+    <p>Rust 有个 Python 没有的设计：<b>代码块最后一行如果不写分号，它的值就是整个块的值</b>。所以函数最后一行直接写 <code class="ic">n * 2</code>，不带分号，它就是返回值——连 return 都省了。这是 Rust 最地道的写法。</p>
+    <div class="code-box">
+      <div class="code-lang"><span>🦀 Rust</span><button class="btn-run" data-run="ch3-double">▶ 运行</button></div>
+<pre><code data-lang="rust">fn double(n: i32) -> i32 {
+    n * 2        // 没有分号：这行的值就是返回值
+}
+
+fn main() {
+    println!("{}", double(21));
+}</code></pre>
+      <div class="console" hidden></div>
+    </div>
+    <div class="concept"><p>分号在这里不是可有可无的标点：<b>加上 =「这事到此为止」；不加 =「这行的结果请拿去用」</b>。一个字符，改变含义。</p></div>
+
+    <h3 class="sec-title">return 什么时候用？</h3>
+    <p>函数末尾的返回：不写 return，直接表达式，最地道。<b>想在中途提前退出</b>：用 return。</p>
+    <div class="code-box">
+      <div class="code-lang"><span>🦀 Rust</span><button class="btn-run" data-run="ch3-check">▶ 运行</button></div>
+<pre><code data-lang="rust">fn check(score: i32) -> &amp;str {
+    if score >= 60 {
+        return "及格";   // 提前返回，用 return
+    }
+    "挂科"               // 最后一行自动就是返回值
+}
+
+fn main() {
+    println!("{}", check(75));
+}</code></pre>
+      <div class="console" hidden></div>
+    </div>
+
+    <h3 class="sec-title">什么都不返回的函数</h3>
+    <p><b>不写 -&gt; 就是「无返回值」</b>，相当于 Python 里隐式返回 None：</p>
+    <div class="code-box">
+      <div class="code-lang"><span>🦀 Rust</span><button class="btn-run" data-run="ch3-shout">▶ 运行</button></div>
+<pre><code data-lang="rust">fn shout(msg: &amp;str) {
+    println!("{msg}!!!");   // 没有 -> ：不返回东西
+}
+
+fn main() {
+    shout("你好");
+}</code></pre>
+      <div class="console" hidden></div>
+    </div>
+    <div class="tip">💡 看到参数里的 <code class="ic">&amp;str</code> 了吗？这个 <code class="ic">&amp;</code> 是「借用」的意思——第 5 章的主角，先记住写法就行。另外函数命名和 Python 一样用 snake_case，这个你熟。</div>
+
+    <div class="takeaway">
+      <div class="tk-title">🎯 本章要点</div>
+      <ul>
+        <li>签名格式：<code class="ic">fn 名字(参数: 类型) -&gt; 返回类型</code></li>
+        <li>最后一行<b>不带分号</b> = 返回值，这是地道写法</li>
+        <li>中途提前退出才用 <code class="ic">return</code></li>
+        <li>合同写得清楚，调用处一旦传错，编译期当场报警——绝不等运行时</li>
+      </ul>
+    </div>
+
+    <div class="quiz-zone" data-quiz="ch3"></div>
+    <div class="ch-banner" hidden></div>
+    <div class="ch-nav">
+      <button class="btn ghost nav-prev" data-goto="ch2">← 上一章</button>
+      <button class="btn ghost nav-next" data-goto="ch4">下一章 →</button>
+    </div>
+  </section>
+
+  <!-- ══════════ 第 4 章 · 控制流 ══════════ -->
+  <section class="chapter" id="ch4">
+    <div class="ch-head">
+      <div class="ch-eyebrow">第 4 章 · 徽章待领：🚦 流程指挥官</div>
+      <h2>控制流：if 的括号去哪了</h2>
+    </div>
+    <p class="lead">好消息：if / while / for 的逻辑你全都会，只是换了身衣服。坏消息只有一个：条件必须是货真价实的 bool。</p>
+
+    <h3 class="sec-title">if：括号和冒号都退休了</h3>
+    <div class="code-compare">
+      <div class="code-box py">
+        <div class="code-lang"><span>🐍 Python</span></div>
+<pre><code data-lang="python">score = 85
+if score >= 90:
+    print("优秀!")
+elif score >= 60:
+    print("及格!")
+else:
+    print("加油!")</code></pre>
+      </div>
+      <div class="code-box rust">
+        <div class="code-lang"><span>🦀 Rust</span><button class="btn-run" data-run="ch4-if">▶ 运行</button></div>
+<pre><code data-lang="rust">fn main() {
+    let score = 85;
+
+    if score >= 90 {
+        println!("优秀!");
+    } else if score >= 60 {
+        println!("及格!");
+    } else {
+        println!("加油!");
+    }
+}</code></pre>
+        <div class="console" hidden></div>
+      </div>
+    </div>
+    <ul class="points">
+      <li>条件不用写括号（硬要写编译器会唠叨让你删）</li>
+      <li>没有冒号和缩进块，<b>大括号负责圈地盘</b></li>
+      <li><code class="ic">elif</code> 变成 <code class="ic">else if</code></li>
+      <li>条件必须是 bool：<code class="ic">if 1 { }</code> 直接报错——「非零即真」在 Rust 不成立</li>
+    </ul>
+
+    <h3 class="sec-title">黑科技：if 是表达式，能直接赋值</h3>
+    <p>if 不光能分支，还能「算出一个值」，直接装进变量——相当于 Python 的三岔路口写法 <code class="ic">level = "及格" if score &gt;= 60 else "挂科"</code>：</p>
+    <div class="code-box">
+      <div class="code-lang"><span>🦀 Rust</span><button class="btn-run" data-run="ch4-ifexpr">▶ 运行</button></div>
+<pre><code data-lang="rust">fn main() {
+    let score = 61;
+    let level = if score >= 60 { "及格" } else { "挂科" };
+    println!("{level}");
+}</code></pre>
+      <div class="console" hidden></div>
+    </div>
+    <p class="compare-note">注意：两个分支产出的必须是<b>同一类型</b>——毕竟要装进同一个盒子。</p>
+
+    <h3 class="sec-title">三种循环，对号入座</h3>
+    <p><b>① loop</b> = <code class="ic">while True:</code>，无限循环，靠 break 逃生：</p>
+    <div class="code-box">
+      <div class="code-lang"><span>🦀 Rust</span><button class="btn-run" data-run="ch4-loop">▶ 运行</button></div>
+<pre><code data-lang="rust">fn main() {
+    let mut count = 0;
+    loop {
+        count += 1;
+        println!("第 {count} 圈");
+        if count >= 3 {
+            break;
+        }
+    }
+}</code></pre>
+      <div class="console" hidden></div>
+    </div>
+    <p><b>② while</b> 和 Python 几乎一模一样（除了没括号没冒号）：</p>
+    <div class="code-box">
+      <div class="code-lang"><span>🦀 Rust</span><button class="btn-run" data-run="ch4-while">▶ 运行</button></div>
+<pre><code data-lang="rust">fn main() {
+    let mut n = 3;
+    while n > 0 {
+        println!("{n}!");
+        n -= 1;
+    }
+    println!("发射 🚀");
+}</code></pre>
+      <div class="console" hidden></div>
+    </div>
+    <p><b>③ for 配范围（Range）</b>，日常最常用：</p>
+    <div class="code-compare">
+      <div class="code-box py">
+        <div class="code-lang"><span>🐍 Python</span></div>
+<pre><code data-lang="python">for i in range(5):
+    print(f"第 {i} 圈")</code></pre>
+      </div>
+      <div class="code-box rust">
+        <div class="code-lang"><span>🦀 Rust</span><button class="btn-run" data-run="ch4-for">▶ 运行</button></div>
+<pre><code data-lang="rust">fn main() {
+    for i in 0..5 {
+        println!("第 {i} 圈");
+    }
+}</code></pre>
+        <div class="console" hidden></div>
+      </div>
+    </div>
+    <table class="cmp-table">
+      <tr><th>Python</th><th>Rust</th><th>含义</th></tr>
+      <tr><td><code class="ic">range(5)</code></td><td><code class="ic">0..5</code></td><td>0、1、2、3、4（不含 5）</td></tr>
+      <tr><td><code class="ic">range(1, 6)</code></td><td><code class="ic">1..6</code> 或 <code class="ic">1..=5</code></td><td>1 到 5（<code class="ic">..=</code> 表示含尾巴）</td></tr>
+      <tr><td><code class="ic">range(0, 10, 2)</code></td><td><code class="ic">(0..10).step_by(2)</code></td><td>带步长要用方法</td></tr>
+    </table>
+    <p class="compare-note">break / continue 跟 Python 一模一样，无缝迁移。</p>
+
+    <div class="takeaway">
+      <div class="tk-title">🎯 本章要点</div>
+      <ul>
+        <li>条件不用括号不用冒号，但<b>必须是 bool</b></li>
+        <li>if 是表达式，可以直接给变量赋值</li>
+        <li><code class="ic">loop</code> = 无限循环；<code class="ic">while</code> = 条件循环；<code class="ic">for + 范围</code> = 最常用</li>
+        <li><code class="ic">0..5</code> ≈ range(5)；<code class="ic">1..=5</code> ≈ range(1, 6)</li>
+      </ul>
+    </div>
+
+    <div class="quiz-zone" data-quiz="ch4"></div>
+    <div class="ch-banner" hidden></div>
+    <div class="ch-nav">
+      <button class="btn ghost nav-prev" data-goto="ch3">← 上一章</button>
+      <button class="btn ghost nav-next" data-goto="ch5">下一章 →</button>
+    </div>
+  </section>
+
+  <!-- ══════════ 第 5 章 · 所有权 ══════════ -->
+  <section class="chapter" id="ch5">
+    <div class="ch-head">
+      <div class="ch-eyebrow">第 5 章 · 徽章待领：👑 所有权觉醒</div>
+      <h2>所有权：Rust 的灵魂（也是你的第一道坎）</h2>
+    </div>
+    <p class="lead">来了，Rust 真正的分水岭——<b>所有权（Ownership）</b>。所有从别的语言转来的人都要在这交学费。别慌：概念本身不难，只是要换个脑子。我们用人话讲。</p>
+
+    <div class="concept">
+      <h4>🚲 先用你熟悉的世界开场</h4>
+      <p>Python 的对象像<b>共享单车</b>：谁都能扫码骑走，公司雇了个保洁阿姨（垃圾回收器 GC）定期回收没人骑的车。</p>
+      <p>Rust 不养阿姨，它立了条规矩：<b>每辆车只能有一个主人，主人一走，车当场回收。</b>就这一条规矩，内存问题从根上没了。</p>
+    </div>
+
+    <h3 class="sec-title">三条铁律（整个 Rust 都盖在这上面）</h3>
+    <div class="laws">
+      <div>1️⃣ 每个值都有一个<b>唯一的主人</b>（owner）</div>
+      <div>2️⃣ 同一时刻，主人<b>只能有一个</b></div>
+      <div>3️⃣ 主人<b>离开作用域</b>，值当场回收</div>
+    </div>
+
+    <h3 class="sec-title">铁律 ③ 演示：作用域结束 = 当场回收</h3>
+    <div class="code-box">
+      <div class="code-lang"><span>🦀 Rust</span><button class="btn-run" data-run="ch5-scope">▶ 运行</button></div>
+<pre><code data-lang="rust">fn main() {
+    {
+        let s = String::from("螃蟹");
+        println!("{s}");   // 主人在岗：随便用
+    }
+    // ← 走出大括号：s 的主人下班，内存当场回收
+}</code></pre>
+      <div class="console" hidden></div>
+    </div>
+    <p class="compare-note">没有 free()，没有 GC，清理时机在<b>编译期</b>就排好了——这就是 Rust 又快又稳的底气。</p>
+
+    <h3 class="sec-title">铁律 ② 演示：赋值 = 过户（move）</h3>
+    <p>Python 赋值是给同一个东西<b>再贴一张名字标签</b>。Rust 赋值是<b>把房本过户</b>——所有权归新主人，旧主人当场失效：</p>
+    <div class="code-box">
+      <div class="code-lang"><span>🦀 Rust</span><button class="btn-run err" data-err="ch5-move">🔍 编译器怎么说？</button></div>
+<pre><code data-lang="rust">fn main() {
+    let s1 = String::from("hi");
+    let s2 = s1;           // ⚠️ 不是复制！所有权从 s1 过户给 s2
+    println!("{s1}");       // ❌ s1 已经作废
+}</code></pre>
+      <div class="console" hidden></div>
+    </div>
+    <p class="compare-note">看到了吗？过完户，旧房主连门都进不去。这不是 bug，是<b>合同精神</b>。</p>
+
+    <div class="warn">
+      <h4>👻 Python 佬熟悉的幽灵 bug</h4>
+      <div class="code-compare">
+        <div class="code-box py">
+          <div class="code-lang"><span>🐍 Python</span></div>
+<pre><code data-lang="python">a = [1, 2, 3]
+b = a            # 又贴一张标签到同一个列表
+b.append(4)
+print(a)         # [1, 2, 3, 4] 😱 a 也被改了！</code></pre>
+        </div>
+        <div class="code-box rust">
+          <div class="code-lang"><span>🦀 Rust</span></div>
+<pre><code data-lang="rust">let a = vec![1, 2, 3];   // vec! ≈ Python 的 [1, 2, 3]
+let b = a;               // 过户！a 当场失效
+// println!("{a}");      // ❌ 编译器：a 已经作废
+let c = b.clone();       // 想要一份？明说 clone</code></pre>
+        </div>
+      </div>
+      <p>「改了 b 惊动了 a」——Python 经典大坑，bug 藏得比对象还深。Rust 里这类问题<b>编译期就死了</b>，轮不到运行时害人。</p>
+    </div>
+
+    <h3 class="sec-title">两个救场法宝</h3>
+    <p><b>想要两份 → .clone()</b>（明说：复制一份新的）：</p>
+    <div class="code-box">
+      <div class="code-lang"><span>🦀 Rust</span><button class="btn-run" data-run="ch5-clone">▶ 运行</button></div>
+<pre><code data-lang="rust">fn main() {
+    let a = String::from("螃蟹");
+    let b = a.clone();        // 复制一份新的
+    println!("{a} 和 {b}");   // 两个主人，各自安好
+}</code></pre>
+      <div class="console" hidden></div>
+    </div>
+    <p><b>只想借看 → &amp;</b>（明说：借用，用完就还）：</p>
+    <div class="code-box">
+      <div class="code-lang"><span>🦀 Rust</span><button class="btn-run" data-run="ch5-borrow">▶ 运行</button></div>
+<pre><code data-lang="rust">fn main() {
+    let s = String::from("你好");
+    say_hi(&amp;s);         // 借出去看看，所有权还在我这
+    println!("{s}");     // ✅ s 照常使用
+}
+
+fn say_hi(msg: &amp;String) {
+    println!("收到: {msg}");
+}</code></pre>
+      <div class="console" hidden></div>
+    </div>
+    <p class="compare-note">函数参数基本都用「借用」，字符串参数写 <code class="ic">&amp;str</code> 就是这个意思——第 3 章那个悬念的答案。只有真正要「接管」时才传值。</p>
+
+    <h3 class="sec-title">好消息：整数这种小家伙不用操心</h3>
+    <div class="code-box">
+      <div class="code-lang"><span>🦀 Rust</span><button class="btn-run" data-run="ch5-copy">▶ 运行</button></div>
+<pre><code data-lang="rust">fn main() {
+    let x = 10;
+    let y = x;             // 整数是 Copy 类型：自动复制一份
+    println!("{x} {y}");   // ✅ 两个都能用
+}</code></pre>
+      <div class="console" hidden></div>
+    </div>
+    <p class="compare-note">数字、布尔、字符这些简单类型是 <b>Copy 类型</b>：赋值时自动复制，旧变量照用不误。所有权过户主要管 String、Vec 这些「大件」。</p>
+
+    <div class="concept">
+      <h4>🧠 为什么要立这个规矩？</h4>
+      <ul>
+        <li><b>不需要 GC</b>：清理时机编译期定死，运行时零垃圾、零停顿</li>
+        <li><b>不可能有悬垂指针</b>：想用已回收的值？编译器当场拦下</li>
+        <li><b>多线程安全</b>：一份数据一个主人，「数据竞争」这种 bug 直接绝种</li>
+      </ul>
+      <p>代价是你现在感到的那点「烦」，回报是：Python 里那些内存泄漏、意外共享、多线程玄学崩溃，在你 Rust 生涯里<b>闻所未闻</b>。</p>
+    </div>
+
+    <div class="takeaway">
+      <div class="tk-title">🎯 本章要点</div>
+      <ul>
+        <li>每个值同时只有<b>一个所有者</b></li>
+        <li>赋值 = 过户（move），旧变量当场失效</li>
+        <li>想复制用 <code class="ic">.clone()</code>，想借看用 <code class="ic">&amp;</code></li>
+        <li>整数等简单类型自动 Copy，不受影响</li>
+        <li>主人离开作用域 → 值自动回收，全程不需要 GC</li>
+      </ul>
+    </div>
+
+    <div class="quiz-zone" data-quiz="ch5"></div>
+    <div class="ch-banner" hidden></div>
+    <div class="ch-nav">
+      <button class="btn ghost nav-prev" data-goto="ch4">← 上一章</button>
+      <button class="btn ghost nav-next" data-goto="ch6">前往第 6 章 →</button>
+    </div>
+  </section>
+
+  <!-- ══════════ 基础篇毕业考 ══════════ -->
+  <section class="chapter" id="final">
+    <div class="ch-head">
+      <div class="ch-eyebrow">基础篇毕业考 · 徽章待领：🏝 基础岛居民</div>
+      <h2>基础岛通关资格考试</h2>
+    </div>
+    <p class="lead">完成基础岛的关卡后，答对这道题即可进入进阶群岛。🦀</p>
+
+    <div class="quiz-zone" data-quiz="final"></div>
+    <div class="ch-banner" hidden></div>
+
+    <div class="grad-wrap" id="gradCard">
+      <div class="cp-card">
+        <div class="cp-icon">🏝</div>
+        <div class="cp-title">基础岛居民 · 通关凭证</div>
+        <div class="cp-body">
+          你已掌握 Rust 的地基五件套 + 新学会的六件套：<br>
+          <b>变量 · 类型 · 函数 · 控制流 · 所有权</b> + <b>字符串 · 集合 · struct · enum/match · Option · Result</b><br>
+          战绩：<b id="cpXp">0</b> XP · 一发命中率 <b id="cpAcc">0%</b>
+        </div>
+        <p class="cp-note">下一站预告：进阶群岛——闭包、迭代器、trait、智能指针、多线程、async、Cargo 工程化。<br>你的 Rust 内功将在这里成型。</p>
+        <button class="btn" data-goto="ch12">扬帆 → 第二部 · 进阶群岛</button>
+      </div>
+    </div>
+
+    <div class="ch-nav">
+      <button class="btn ghost nav-prev" data-goto="ch11">← 上一章</button>
+      <button class="btn ghost nav-next" data-goto="ch12">第二部 →</button>
+    </div>
+  </section>
+
+  </main>
+</div>
+
+<!-- ══════════ 漂浮的 Ferris ══════════ -->
+<div class="ferris-float" id="ferrisFloat" title="点我聊天">
+  <div class="bubble" id="ferrisBubble"></div>
+  <svg viewBox="0 0 220 175" class="ferris-svg"><use href="#ferrisArt"/></svg>
+</div>
+
+<div id="toastWrap"></div>
+<canvas id="fx"></canvas>
+
+<footer class="foot">🦀 Ferris 祝你锈途愉快 · 用 ♥ 与大括号制作</footer>
+
+<script src="app.js?v=ad2274a774fd"></script>
+<script src="exercise-engine.js?v=523ec1415306"></script>
+<script src="content-basics2.js?v=f7660534595a"></script>
+<script src="content-advanced.js?v=49d712fe8a40"></script>
+<script src="content-projects.js?v=1ed6096bf290"></script>
+<script src="content-projects2.js?v=a8a66529dae5"></script>
+<script src="content-projects3.js?v=eeaadf657fa0"></script>
+<script src="sections-1.js?v=10aabb126fcc"></script>
+<script src="sections-2.js?v=89bba85667ea"></script>
+<script src="sections-3.js?v=9399b345417d"></script>
+<script src="sections-4.js?v=0d4b0ce333fe"></script>
+<script src="sections-5.js?v=2ade43f381f9"></script>
+<script src="sections-6.js?v=0fb503eb39a8"></script>
+<script src="sections-7.js?v=b3156e8e2377"></script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Go 训练场 · 从 Hello World 到并发的动手入门</title>
+<meta name="description" content="零基础学 Go:24 关、150 道练习，从基础语法到 JSON、并发和项目实战,全程自己写代码自己跑,没有一道选择题。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐹</text></svg>">
+<link rel="stylesheet" href="style.css?v=1c54a2d88322">
+</head>
+<body>
+<noscript><p style="padding:20px;text-align:center">训练场需要 JavaScript 才能开门 🐹</p></noscript>
+
+<!-- ══════════ 小地鼠画本体(供复用) ══════════ -->
+<svg width="0" height="0" style="position:absolute">
+<defs>
+<g id="gopherArt">
+  <ellipse cx="70" cy="30" rx="11" ry="15" fill="#5f7c8a"/>
+  <ellipse cx="150" cy="30" rx="11" ry="15" fill="#5f7c8a"/>
+  <ellipse cx="70" cy="33" rx="6" ry="9" fill="#8fd0e8"/>
+  <ellipse cx="150" cy="33" rx="6" ry="9" fill="#8fd0e8"/>
+  <ellipse cx="110" cy="88" rx="63" ry="58" fill="#8fd0e8"/>
+  <ellipse cx="110" cy="102" rx="44" ry="35" fill="#ffffff"/>
+  <circle cx="86" cy="78" r="11" fill="#ffffff"/>
+  <circle cx="134" cy="78" r="11" fill="#ffffff"/>
+  <circle cx="88" cy="80" r="5" fill="#17303f"/>
+  <circle cx="132" cy="80" r="5" fill="#17303f"/>
+  <circle cx="89.5" cy="78" r="1.6" fill="#fff"/>
+  <circle cx="133.5" cy="78" r="1.6" fill="#fff"/>
+  <ellipse cx="110" cy="100" rx="8" ry="5.5" fill="#17303f"/>
+  <rect x="100" y="107" width="9" height="12" rx="2.5" fill="#ffffff" stroke="#a8ccd8" stroke-width="1.5"/>
+  <rect x="111" y="107" width="9" height="12" rx="2.5" fill="#ffffff" stroke="#a8ccd8" stroke-width="1.5"/>
+</g>
+</defs>
+</svg>
+
+<!-- ══════════ 顶栏 ══════════ -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="shelf-back" href="/">🐹 返回专题书架</a>
+    <div class="brand">
+      <svg class="brand-logo" viewBox="45 10 130 115"><use href="#gopherArt"/></svg>
+      <div class="brand-text">
+        <b>Go 训练场</b>
+        <span>动手写代码 · 没有一道选择题</span>
+      </div>
+    </div>
+    <div class="hud">
+      <span class="hud-lv" id="lvlTitle">Lv1 沙场新兵</span>
+      <div class="xp-track"><i id="xpFill"></i></div>
+      <span class="hud-xp" id="xpText">0 经验</span>
+      <span class="hud-ch" id="chProgress">0/24 关</span>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <!-- ══════════ 侧栏 ══════════ -->
+  <aside class="sidebar">
+    <div class="side-title">🗺 训练路线</div>
+    <nav id="chapterNav"></nav>
+    <div class="side-title">🏅 徽章墙 <span id="badgeCount"></span></div>
+    <div id="badgeWall"></div>
+    <button id="btnReset" class="reset-btn">↺ 清零重练</button>
+  </aside>
+
+  <!-- ══════════ 正文(专题由内容文件动态注册) ══════════ -->
+  <main id="main"></main>
+</div>
+
+<!-- ══════════ 漂浮的小地鼠 ══════════ -->
+<div class="go-float" id="goFloat" title="点我传音">
+  <div class="bubble" id="goBubble"></div>
+  <svg viewBox="45 10 130 115" class="go-svg"><use href="#gopherArt"/></svg>
+</div>
+
+<div id="toastWrap"></div>
+<canvas id="fx"></canvas>
+
+<footer class="foot">🐹 Go 训练场 · 从 Hello World 到并发 · 用 ♥ 和大括号制作 · 进度存于你的浏览器</footer>
+
+<script src="app.js?v=8be2d4745ea8"></script>
+<script src="checker.js?v=5557bfdbdc83"></script>
+<script src="widgets.js?v=7e994c1573ff"></script>
+<script src="content-1.js?v=c7f183caf2f4"></script>
+<script src="content-2.js?v=da9e5e8e4f59"></script>
+<script src="content-3.js?v=fe5ccbd759e0"></script>
+<script src="content-4.js?v=0af6854c9f93"></script>
+<script src="content-5.js?v=a132bb2d7767"></script>
+<script src="content-6.js?v=5a140bd6506a"></script>
+<script src="content-7.js?v=a136a62370be"></script>
+<script src="content-8.js?v=b34d36ec6919"></script>
+<script src="content-9.js?v=4eacd7d0d5f3"></script>
+<script src="content-10.js?v=1dfafbe7039e"></script>
+<script src="content-11.js?v=65a84b03ba88"></script>
+</body>
+</html>

@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文电训练营 · 用 DeepSeek DSH 写公文(去 AI 味实战手册) · Hhuua的自习室</title>
+<meta name="description" content="写给完全不懂电脑的公文写作人:从安装 DeepSeek DSH 到六个公文技能包、去 AI 味审校,手把手每步教学。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="progress"><i id="pbar"></i></div>
+
+<nav class="study-nav" aria-label="自习室导航">
+  <a class="shelf-back" href="https://blog.hhuua.xyz/">← 返回专题书架</a>
+  <span><img src="https://blog.hhuua.xyz/assets/logo.png" width="26" height="26" alt="">Hhuua的自习室</span>
+</nav>
+
+<div class="layout">
+
+<!-- ══════════ 侧边目录 ══════════ -->
+<aside class="side">
+  <div class="side-title">📑 目 录</div>
+  <nav id="toc">
+    <a href="#c0">第一章 为什么用 dsh</a>
+    <a href="#c1">第二章 认识终端</a>
+    <a href="#c2">第三章 安装 Node.js</a>
+    <a href="#c3">第四章 领取 API 钥匙</a>
+    <a href="#c4">第五章 安装 dsh 工作台</a>
+    <a href="#c5">第六章 提示词七要素</a>
+    <a href="#c6">第七章 Skill 操作手册</a>
+    <a href="#c7">第八章 六个公文技能包 ⭐</a>
+    <span class="toc-sub"><a href="#s7-1">· 通知</a><a href="#s7-2">· 请示</a><a href="#s7-3">· 报告</a><a href="#s7-4">· 会议纪要</a><a href="#s7-5">· 函</a><a href="#s7-6">· 讲话稿</a></span>
+    <a href="#c8">第九章 素材库</a>
+    <a href="#c9">第十章 AI 味门诊</a>
+    <a href="#c10">第十一章 公文体与 AI 味</a>
+    <a href="#c11">第十二章 去味审校技能</a>
+    <a href="#c12">第十三章 实战三例</a>
+    <a href="#cend">附 录 报错急救表</a>
+  </nav>
+  <div class="side-box"><b>⚠️ 全篇红线</b><br>涉密不上网、涉密不上平台。本教程只处理一般事务性公文。</div>
+</aside>
+
+<!-- ══════════ 正文 ══════════ -->
+<main class="main">
+
+<header class="masthead">
+  <div class="docnum">文电训〔2026〕第 1 期</div>
+  <h1>文电训练营</h1>
+  <div class="subtitle">用 DeepSeek DSH 写公文 · 从零起步到去除 AI 味</div>
+  <div class="redline"></div>
+  <div class="meta">受众:完全不懂电脑的公文写作人 · 环境:Windows 为主(macOS 附注)· 成文:2026 年 11 月</div>
+  <div class="seal">内部教材<br>注意保密</div>
+</header>
+
+<div class="notice">
+  ⚠️ <b>先读三行再往下翻:</b>① 本教程的 AI 工具只用来处理<b>一般事务性公文</b>——凡标有密级、涉及敏感数据的内容,<b>一律不上网、不上任何平台</b>,包括本工具;② dsh 是 DeepSeek 官方开源的命令行智能体,处于早期版本(Developer Preview),界面细节可能与本文略有出入,以官方仓库为准;③ 全文按"每一步点什么、会看到什么、错了怎么办"来写,跟着走就行。
+</div>
+
+<!-- ══════════ 第一章 ══════════ -->
+<section class="chap" id="c0">
+  <div class="chap-head"><div class="chap-no">壹</div><h2>为什么用 dsh——先想清楚再动手</h2></div>
+  <div class="chap-sub">预计阅读 8 分钟 · 本章没有任何操作,放心看</div>
+
+  <p class="lead">你可能已经用过网页版 DeepSeek(就是手机和电脑浏览器里那个聊天框)。那理解 dsh 只需要一句话:<b>网页版是临时请来的外援,dsh 是给你配了一个有工作台的数字文秘。</b></p>
+
+  <h3>外援和文秘,差在哪</h3>
+  <p>用网页版写公文,你每次都要重新交代一遍:"我们单位叫什么、落款怎么写、不要用那些 AI 腔的词……"——它记不住,你烦,它写出来的东西还不稳。</p>
+  <p>dsh 不一样,它有四样网页版没有的"文秘装备":</p>
+
+  <div class="flow">
+    <div class="nd"><b>📁 工作目录</b>一个专属文件夹<br>素材和成稿都住这</div><div class="ar">→</div>
+    <div class="nd"><b>📚 素材库</b>单位口径、落款、范文<br>AI 每次都先查再写</div><div class="ar">→</div>
+    <div class="nd"><b>📖 技能</b>一页操作手册<br>写通知永远走同一套流程</div><div class="ar">→</div>
+    <div class="nd"><b>📄 直接出文件</b>成稿自动存档<br>不用复制粘贴</div>
+  </div>
+
+  <table class="tbl">
+    <tr><th>对比项</th><th>网页版聊天框</th><th>dsh 数字文秘</th></tr>
+    <tr><td>单位背景</td><td class="no">每次重新交代</td><td class="yes">素材库里存着,自动带上</td></tr>
+    <tr><td>写作流程</td><td class="no">每次口头叮嘱"别有 AI 腔"</td><td class="yes">技能手册里写死,自动执行</td></tr>
+    <tr><td>产出方式</td><td class="no">复制粘贴到 Word</td><td class="yes">直接写成文件存进文件夹</td></tr>
+    <tr><td>质量稳定性</td><td class="no">看模型心情</td><td class="yes">每次走同一套流程 + 内置自查</td></tr>
+    <tr><td>费用</td><td>免费或包月</td><td>按量付费,一份公文约几分钱</td></tr>
+  </table>
+
+  <h3>dsh 是什么来头</h3>
+  <p>dsh 全名 <b>DeepSeek Harness</b>,是 DeepSeek 官方 2026 年 8 月开源的命令行智能体(开源 = 代码公开,免费可用)。你在终端里敲一条命令启动它,浏览器里就会出现一个本地工作台——它在<b>你自己的电脑</b>上干活,素材和成稿都存在你的文件夹里。</p>
+  <div class="notebox">🔬 <b>名词急救站(全文通用):</b>每章第一次出现的术语都会在这里用人话解释。<br>
+  <b>智能体(Agent)</b>= 不只会聊天的 AI,还能替你动手干活(读写文件、执行操作);<br>
+  <b>命令行 / 终端</b>= 用打字给电脑下指令的黑窗口,第二章手把手教;<br>
+  <b>开源</b>= 软件的图纸(源代码)公开,谁都能免费查看和使用的软件。</div>
+
+  <h3>前方路况预告</h3>
+  <p>全文十三章,分三段走:</p>
+  <div class="flow">
+    <div class="nd"><b>第 1~5 章</b>装好环境<br>(约 40 分钟,一次搞定)</div><div class="ar">→</div>
+    <div class="nd"><b>第 6~9 章</b>配齐装备<br>(提示词 + 6 技能包 + 素材库)</div><div class="ar">→</div>
+    <div class="nd"><b>第 10~13 章</b>去除 AI 味<br>(症状图鉴 + 审校技能 + 实战)</div>
+  </div>
+  <p>第一章到第五章是唯一"费劲"的部分——就像新入职要先领工牌、配电脑。配好之后,写公文就是:打开 dsh,一句话交代,等初稿,自己润色把关。别怕"终端"和"命令"这两个词,第二章开始你会发现:所谓命令,就是<b>一行复制粘贴</b>,本文全部替你写好了。</p>
+
+  <div class="tipbox">💡 <b>判断你要不要学:</b>如果你的公文量不大(一年十来份)、不追求单位口径长期一致,网页版也够用,本文第 5~13 章的提示词和去 AI 味方法对网页版同样有效;如果你每周都要写、要维护一堆口径素材、想要"一句话出规范初稿",dsh 值得这 40 分钟。</div>
+</section>
+
+<!-- ══════════ 第二章 ══════════ -->
+<section class="chap" id="c1">
+  <div class="chap-head"><div class="chap-no">贰</div><h2>认识终端——那个"黑窗口"不可怕</h2></div>
+  <div class="chap-sub">本章任务:会打开终端、会往里粘贴、会按回车。就这三件事。</div>
+
+  <p class="lead">终端(Windows 里叫 <b>PowerShell</b>)就是一个黑底白字的窗口:<b>你打一行字、按回车,电脑就照办</b>。仅此而已。它是"用打字给电脑下指令"的老办法,所有命令本文都替你写好了,你只负责复制、粘贴、回车。</p>
+
+  <h3>第一步:打开它</h3>
+  <div class="step">
+    <div class="step-no">1</div>
+    <div class="step-body">
+      <span class="s-lab">👉 操作:</span>按一下键盘左下角的 <b>Win 键</b>(窗户图案那个键),不用松手,直接打字 <b>powershell</b>,屏幕会弹出"Windows PowerShell",按<b>回车</b>。<br>
+      <span class="s-lab">👀 应看到:</span>弹出一个蓝底(或黑底)白字的窗口,开头一行类似下面这样:<br>
+      <span class="s-fix"><b>🔧 出错了:</b>搜出来的是"Windows PowerShell ISE"或"PowerShell 7"也能用;搜不到就用第 2 种方法——按 Win+X,在弹出菜单里点「终端」或「Windows PowerShell」。</span>
+    </div>
+  </div>
+  <div class="term">
+    <div class="term-bar"><i></i><i></i><i></i><span>Windows PowerShell</span></div>
+    <pre><span class="ps">PS C:\Users\你的名字&gt;</span> <span style="animation:blink 1s steps(1) infinite">▌</span></pre>
+  </div>
+  <p>开头那行叫<b>提示符</b>。翻译成人话:「我准备好了,请下命令」。<code class="cmd" style="display:inline;padding:1px 8px">PS C:\Users\你的名字&gt;</code> 里的路径就是"你现在的位置"(后面存文件会用到这个概念)。</p>
+
+  <h3>第二步:复制、粘贴、回车——终端三板斧</h3>
+  <table class="tbl">
+    <tr><th>动作</th><th>怎么做</th><th>说明</th></tr>
+    <tr><td>复制</td><td>选中文字 → <b>Ctrl + C</b></td><td>和平时复制一模一样</td></tr>
+    <tr><td>粘贴</td><td>在 PowerShell 窗口里<b>点鼠标右键</b>(或 Ctrl + V)</td><td>老版本 PowerShell 认右键,最保险</td></tr>
+    <tr><td>执行</td><td>按<b>回车</b></td><td>命令立刻执行,结果几秒内出现</td></tr>
+  </table>
+  <p>热身一下。复制下面这行,粘贴进终端,回车:</p>
+  <div class="cmd" data-copy>echo 我在学dsh</div>
+  <div class="term">
+    <div class="term-bar"><i></i><i></i><i></i><span>Windows PowerShell</span></div>
+    <pre><span class="ps">PS C:\Users\你的名字&gt;</span> echo 我在学dsh
+<span class="out">我在学dsh</span></pre>
+  </div>
+  <p>它把你说的话原样喊了回来(echo = 回声)。恭喜,你已经会用终端了。</p>
+
+  <div class="tipbox">💡 <b>心理建设:</b>命令打错<b>不会弄坏电脑</b>,顶多弹几行红字(报错),重新粘贴一遍就行。本文出现的所有命令都是安全的读/写文件操作,放心敲。用完直接点右上角 × 关窗口即可。</div>
+  <div class="notebox">🍎 <b>macOS 用户附注:</b>打开「启动台」→「其他」→「终端」即可,粘贴用 Cmd+V,其余完全一样。本文遇到 Windows 特有步骤时会再附注。</div>
+</section>
+
+<!-- ══════════ 第三章 ══════════ -->
+<section class="chap" id="c2">
+  <div class="chap-head"><div class="chap-no">叁</div><h2>安装 Node.js——给 dsh 装发动机</h2></div>
+  <div class="chap-sub">本章任务:装好 Node.js,验证成功。全程约 8 分钟。</div>
+
+  <p class="lead">dsh 是用一种叫 Node.js 的软件造的。你可以把 dsh 理解成一辆车,<b>Node.js 是发动机</b>——先装发动机,才能发动车。</p>
+
+  <div class="step">
+    <div class="step-no">1</div>
+    <div class="step-body">
+      <span class="s-lab">👉 操作:</span>打开浏览器,地址栏输入 <b>nodejs.org</b> 回车。在首页找到绿色大按钮,写着 <b>LTS</b> 和版本号(如 22.x.x,认准 LTS 字样),点它下载。<br>
+      <span class="s-lab">👀 应看到:</span>浏览器开始下载一个后缀为 <b>.msi</b> 的文件(约 30MB,通常在「下载」文件夹)。<br>
+      <span class="s-fix"><b>🔧 出错了:</b>分不清哪个按钮?页面上有两个版本按钮,<b>不要选带 "Current" 的</b>,选带 <b>"LTS"(推荐多数用户)</b> 的那个。</span>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-no">2</div>
+    <div class="step-body">
+      <span class="s-lab">👉 操作:</span>双击下载好的 .msi 文件。安装向导弹出来后一路点:<b>Next → 勾住 "Automatically install the necessary tools…" → Next → Install</b>(会弹一个是否允许安装的窗口,点「是」)→ 等进度条走完 → <b>Finish</b>。<br>
+      <span class="s-lab">👀 应看到:</span>安装完成,窗口自动关闭。期间若弹出黑色小窗自动干活,不用管它,它会自己关。</span>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-no">3</div>
+    <div class="step-body">
+      <span class="s-lab">👉 操作:</span><b>关掉旧的 PowerShell 窗口,重新打开一个新的</b>(按上一章的方法)。然后依次粘贴这两行命令,各按一次回车:<br>
+      <span class="s-lab">👀 应看到:</span>分别冒出版本号(你的数字和图里不完全一样,以 v22 开头就对了)。<br>
+      <span class="s-fix"><b>🔧 出错了:</b>提示「'node' 不是内部或外部命令…」→ 99% 是<b>没重开终端</b>。重开一次;还不行,重跑安装程序,勾选默认选项(它会自动配置 PATH)。</span>
+    </div>
+  </div>
+  <div class="cmd" data-copy>node -v</div>
+  <div class="cmd" data-copy>npm -v</div>
+  <div class="term">
+    <div class="term-bar"><i></i><i></i><i></i><span>Windows PowerShell</span></div>
+    <pre><span class="ps">PS C:\Users\你的名字&gt;</span> node -v
+<span class="out">v22.19.0</span>
+<span class="ps">PS C:\Users\你的名字&gt;</span> npm -v
+<span class="out">10.9.2</span></pre>
+  </div>
+
+  <div class="notebox">🔬 <b>名词急救站:</b><b>Node.js</b> = 让电脑能运行 JavaScript 程序的"发动机",dsh 靠它启动;<b>npm</b> = 发动机自带的"应用商店 + 装卸工",第五章就用它装 dsh;<b>LTS</b> = Long Term Support,长期支持版 = 稳定、不折腾的版本,选它总没错。</div>
+  <div class="tipbox">🍎 <b>macOS 附注:</b>官网会自动给 Mac 出 .pkg 安装包,双击装完同样执行 <b>node -v</b> 验证。</div>
+</section>
+
+<!-- ══════════ 第四章 ══════════ -->
+<section class="chap" id="c3">
+  <div class="chap-head"><div class="chap-no">肆</div><h2>领取 API 钥匙——你的门禁卡</h2></div>
+  <div class="chap-sub">本章任务:拿到一串钥匙码,存进记事本。全程约 6 分钟。</div>
+
+  <p class="lead">dsh 干活时要调用 DeepSeek 的模型服务,调用就要"刷卡"——这串码叫 <b>API Key</b>,相当于<b>单位门禁卡</b>:卡上有余额,刷一次扣几分钱,卡丢了(泄露)别人也能刷你的钱。所以这章既要教你领卡,也要教你护卡。</p>
+
+  <h3>领卡四步</h3>
+  <div class="step">
+    <div class="step-no">1</div>
+    <div class="step-body">
+      <span class="s-lab">👉 操作:</span>打开浏览器,地址栏输入 <b>platform.deepseek.com</b> 回车(这是 DeepSeek 的「开放平台」,和聊天版 deepseek.com 是<b>两个网站</b>),点「注册」,用手机号注册并登录。<br>
+      <span class="s-lab">👀 应看到:</span>进入平台控制台首页。<br>
+      <span class="s-fix"><b>🔧 出错了:</b>提示需要实名认证(2026 年国内平台普遍要求)——按提示用手机完成即可,这是平台合规要求,和办手机号实名是一个道理。</span>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-no">2</div>
+    <div class="step-body">
+      <span class="s-lab">👉 操作:</span>在左侧菜单找到「充值」(或「费用」),充值 <b>10 元</b>。<br>
+      <span class="s-lab">👀 应看到:</span>余额显示 ¥10。<br>
+      <span class="s-fix"><b>💰 心里账:</b>写一份千字公文,模型费约 1~3 分钱。10 元按一周写 5 份算,能用半年以上,不用多充。</span>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-no">3</div>
+    <div class="step-body">
+      <span class="s-lab">👉 操作:</span>左侧菜单点 <b>「API Keys」</b>(有的界面叫「API 密钥」)→ 点「创建 API Key」→ 名字随便填(比如 <b>gongwen</b>)→ 确定。<br>
+      <span class="s-lab">👀 应看到:</span>弹出一串以 <b>sk-</b> 开头的长密码。<br>
+      <span class="s-fix"><b>⚠️ 划重点:</b>这串码<b>只完整显示这一次</b>,关掉就再也看不到了。立刻点旁边的「复制」。</span>
+    </div>
+  </div>
+  <div class="browser">
+    <div class="br-bar"><i></i><i></i><i></i><span class="br-url">platform.deepseek.com → API Keys</span></div>
+    <div class="br-body">
+      <div class="br-title">创建 API Key</div>
+      <div class="br-row"><span class="lab">名称</span><div class="inp">gongwen</div></div>
+      <div class="br-row"><span class="lab">用途</span><div class="inp grey">绑定 DeepSeek 开放平台账户</div></div>
+      <div class="br-btn">创 建</div>
+      <div class="br-note">↓ 创建后弹出(示意,你的码会以 sk- 开头且长得多)</div>
+      <div class="br-row" style="margin-top:12px"><span class="lab">密钥</span><div class="inp">sk-示例密钥…</div></div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-no">4</div>
+    <div class="step-body">
+      <span class="s-lab">👉 操作:</span>打开电脑<b>记事本</b>(Win 键 → 输入「记事本」→ 回车),粘贴这串码,「文件 → 另存为」存到桌面,文件名写 <b>我的钥匙.txt</b>。<br>
+      <span class="s-lab">👀 应看到:</span>桌面出现一个 txt 文件,里面躺着你的 sk- 长码。第五章就要用到它。</span>
+    </div>
+  </div>
+
+  <div class="warnbox">⚠️ <b>护卡三不(刻在脑门上):</b>① <b>不</b>发微信群、不截图发人;② <b>不</b>告诉任何人,包括"客服"(真客服永远不会问你要);③ <b>不</b>上传网盘/博客。万一泄露:回平台 API Keys 页面把它「删除」,重新创建一张卡就行,损失可控。</div>
+  <div class="notebox">🔬 <b>名词急救站:</b><b>API Key</b> = 一串密码,程序拿它"刷卡"调用 AI 服务;<b>API</b> = 应用程序接口,程序和程序之间的服务窗口,你不用深入理解,知道"刷卡口"就行。</div>
+</section>
+
+<!-- ══════════ 第五章 ══════════ -->
+<section class="chap" id="c4">
+  <div class="chap-head"><div class="chap-no">伍</div><h2>安装 dsh,打开你的工作台</h2></div>
+  <div class="chap-sub">本章任务:跑起来,配好钥匙,完成第一次对话。约 10 分钟。</div>
+
+  <p class="lead">万事俱备:发动机(Node.js)有了,门禁卡(API Key)领了。现在把车开回家。</p>
+
+  <h3>先试驾,再落户</h3>
+  <p>复制下面这行,粘贴进 PowerShell,回车:</p>
+  <div class="cmd" data-copy>npx @deepseek-ai/dsh web</div>
+  <div class="step">
+    <div class="step-no">1</div>
+    <div class="step-body">
+      <span class="s-lab">👀 应看到:</span>第一行问你是否要下载安装包,输入 <b>y</b> 回车(个别版本直接自动下载)。屏幕滚动下载进度条,<b>耐心等 1~3 分钟</b>——第一次要取回不少零件,以后秒开。<br>
+      <span class="s-lab">👀 应看到:</span>最后终端打出一个网址,形如 <b>http://127.0.0.1:3080/?token=一长串</b>,浏览器自动弹出工作台页面。<br>
+      <span class="s-fix"><b>🔧 出错了:</b>下载卡住不动 → 多半是网络慢,关掉窗口(Ctrl+C)重试一两次;<b>浏览器没自动开</b> → 把终端里那个完整网址(连同 token 一长串)复制,手动粘到浏览器地址栏。</span>
+    </div>
+  </div>
+  <div class="term">
+    <div class="term-bar"><i></i><i></i><i></i><span>Windows PowerShell</span></div>
+    <pre><span class="ps">PS C:\Users\你的名字&gt;</span> npx @deepseek-ai/dsh web
+…(下载进度,耐心等)…
+<span class="out">DeepSeek Harness 已启动
+➜ Web UI: http://127.0.0.1:3080/?token=b3f2…(自动打开浏览器)</span></pre>
+  </div>
+  <div class="notebox">🔬 <b>名词急救站:</b><b>npx</b> = "先用后装"——不安装直接试跑一次;<b>127.0.0.1:3080</b> = 你自己电脑的"3080 号房间",这个网址只有你的电脑能打开,外网访问不了;<b>token</b> = 临时门票,别人拿到这张票才能进你的工作台——所以那个带 token 的完整网址<b>别转发给任何人</b>。</div>
+
+  <p>试驾满意,就落户成正式安装——以后一条更短的命令就能启动:</p>
+  <div class="cmd" data-copy>npm install -g @deepseek-ai/dsh</div>
+  <div class="cmd" data-copy>dsh web</div>
+  <p>从今往后,启动口诀就八个字:<b>打开终端,敲 dsh web</b>(没落户就用 npx 那行长命令,效果一样)。</p>
+
+  <h3>第一次进门:三件小事</h3>
+  <div class="step">
+    <div class="step-no">1</div>
+    <div class="step-body">
+      <span class="s-lab">👉 选工作目录:</span>第一次打开,它会请你选一个「工作目录」——就是第 1 章说的"专属文件夹",今后你的素材、成稿全住这里面。<b>新建一个</b>:在「文档」文件夹里建一个 <b>公文写作</b> 文件夹,选它。<br>
+      <span class="s-fix"><b>💡 建议:</b>这个文件夹就是你的"数字办公室",取个好认的名字,放好别乱挪。</span>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-no">2</div>
+    <div class="step-body">
+      <span class="s-lab">👉 配钥匙(方法一,推荐):</span>首次启动若出现「凭据 / API Key」引导,直接把记事本里的 sk- 长码粘贴进去,确认。它会替你保管。<br>
+      <span class="s-fix"><b>🔧 没弹引导?</b>用方法二:在 PowerShell 里按住 Ctrl 敲两下 C(停掉 dsh),然后执行下一节的两条命令,再重新 <b>dsh web</b>。</span>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-no">3</div>
+    <div class="step-body">
+      <span class="s-lab">👉 切深色:</span>页面右上角有深/浅色主题切换,按喜好选。工作台界面导览见下图。<br>
+      <span class="s-fix"><b>🍎 macOS 附注:</b>一切同上,只是终端里粘贴用 Cmd+V。</span>
+    </div>
+  </div>
+
+  <div class="browser">
+    <div class="br-bar"><i></i><i></i><i></i><span class="br-url">http://127.0.0.1:3080</span></div>
+    <div class="br-body">
+      <div class="br-title">DSH 工作台(界面示意)</div>
+      <div style="display:flex;gap:10px;min-height:130px">
+        <div style="flex:0 0 86px;border:1px dashed var(--line-soft);border-radius:8px;padding:8px;font-size:11px;color:var(--faint)">会话列表<br><br>· 新建会话<br>· 昨天的通知初稿<br>· 纪要整理…</div>
+        <div style="flex:1;display:flex;flex-direction:column;border:1px dashed var(--line-soft);border-radius:8px;padding:8px">
+          <div style="font-size:11.5px;color:var(--faint)">中间:对话区(你的消息 + AI 的回复,以及它调用的工具都会显示在这)</div>
+          <div style="margin-top:auto;border:1px solid var(--line-soft);border-radius:7px;padding:7px 10px;font-size:12px;color:var(--gold)">输入框:把要求打在这里…… <span style="color:var(--faint)">[+] 技能入口</span></div>
+        </div>
+      </div>
+      <div class="br-note">实际界面以官方版本为准;认准三块:左=会话,中=对话与输入框,输入框旁的 [+] 里能看到技能。</div>
+    </div>
+  </div>
+
+  <h3>方法二:记事本配钥匙(最稳的备胎)</h3>
+  <p>如果引导没弹出、或你想手动管理,把钥匙写进一个固定的小文件。先建个"钥匙盒"文件夹(复制粘贴执行):</p>
+  <div class="cmd" data-copy>mkdir $env:USERPROFILE\.dsh</div>
+  <p>然后:打开<b>记事本</b> → 只粘贴一行内容(换成你自己的码,注意冒号后面有个空格,别丢):</p>
+  <div class="cmd" data-copy>DEEPSEEK_API_KEY=sk-你的长码粘贴到这里</div>
+  <p>「文件 → 另存为」→ 位置选 <b>C:\Users\你的名字\.dsh</b> → 文件名填 <b>".env"</b>(<b>连引号一起</b>填,防止记事本自作主张加 .txt 后缀)→ 保存类型选「所有文件」→ 编码选 <b>UTF-8</b> → 保存。然后重新运行 <b>dsh web</b>,钥匙生效。</p>
+  <div class="warnbox">⚠️ <b>记事本三坑:</b>① 文件名没带引号 → 存成了「.env.txt」,失败;② 编码选了 ANSI → 偶发乱码,认准 UTF-8;③ 存错文件夹 → 找不到。拿不准就按方法一走引导,让 dsh 替你保管。</div>
+
+  <h3>验收:跟它说第一句话</h3>
+  <p>工作台输入框里打字(相当于给文秘派第一件活):</p>
+  <div class="cmd" data-copy>列出当前目录的所有文件</div>
+  <p>应看到它<b>自己动手</b>调用了文件工具,翻完文件夹后向你汇报结果——这就是"智能体"和"聊天框"的区别:它不是嘴上说说,是真去干了。</p>
+  <div class="tipbox">💡 <b>日常启动口诀:</b>以后每次要用 → 打开 PowerShell → 敲 <b>dsh web</b> → 浏览器自动开工作台;用完直接关两个窗口(终端和工作台页面),一切数据都在你的文件夹里,不会丢。</div>
+</section>
+
+<!-- ══════════ 第六章 ══════════ -->
+<section class="chap" id="c5">
+  <div class="chap-head"><div class="chap-no">陆</div><h2>提示词七要素——把"交办单"写规范</h2></div>
+  <div class="chap-sub">本章无操作,是写好公文的心法。对 dsh 和网页版同样有效。</div>
+
+  <p class="lead">AI 写不好公文,九成不是它笨,是<b>交办单没写清</b>。提示词就是你的工作交办单——交代得越像回事,初稿就越像回事。一份合格的公文交办单,七个要素:</p>
+
+  <table class="tbl">
+    <tr><th>要素</th><th>是什么</th><th>示例</th></tr>
+    <tr><td><b>① 身份</b></td><td>我是谁(单位/岗位)</td><td>我是××街道办办公室文秘</td></tr>
+    <tr><td><b>② 任务</b></td><td>写什么文种</td><td>起草一份通知</td></tr>
+    <tr><td><b>③ 要素清单</b></td><td>事由、时间、地点、对象、要求、联系人——有啥写啥</td><td>见下方模板</td></tr>
+    <tr><td><b>④ 格式</b></td><td>标准公文格式 / 分条列项 / 字数</td><td>标准格式,600 字以内</td></tr>
+    <tr><td><b>⑤ 语气</b></td><td>庄重简洁 / 口语化(讲话稿用)</td><td>庄重简洁,不抒情</td></tr>
+    <tr><td><b>⑥ 禁忌</b></td><td>提前打招呼:不要哪些 AI 腔</td><td>不用"赋能""抓手",不排比,不空话结尾</td></tr>
+    <tr><td><b>⑦ 交付</b></td><td>怎么给、写到哪、要不要自查</td><td>写完自查数字与时间,存到成稿文件夹</td></tr>
+  </table>
+
+  <h3>同一件事,两种交办</h3>
+  <div class="duibi">
+    <div class="dui-bad"><span class="tag">✗ 模糊交办(初稿能看吗?)</span><p>帮我写个通知,街道要搞防汛演练。</p></div>
+    <div class="dui-good"><span class="tag">✓ 规范交办(初稿八成能用)</span><p>我是××街道办文秘。起草一份<b>通知</b>:各社区主任带队,6 月 12 日(周五)9:00 到街道文体中心参加防汛应急演练,提前 10 分钟签到,携带雨具和对讲机;联系人王倩 5xx-xxxx。标准公文格式,600 字以内,语气庄重简洁。不要用"赋能、抓手、闭环"等词,不要排比句,不要空话结尾。写完自查一遍时间、地点、电话。</p></div>
+  </div>
+  <p class="dui-why"><b>诊断:</b>右边这份把七个要素全填齐了——AI 拿到的不只是"写通知"三个字,而是一张<b>信息完整的交办单</b>。它猜得越少,你改得越少。</p>
+
+  <h3>懒人填空模板(复制去改)</h3>
+  <div class="cmd" data-copy data-copy-text="【身份】我是××单位办公室文秘
+【任务】起草一份「通知/请示/报告/纪要/函/讲话稿」
+【要素】事由:……;时间:……;地点:……;对象:……;要求:……;联系人及电话:……
+【格式】标准公文格式,分条列项,字数____以内
+【语气】庄重简洁(讲话稿则:口语化、念得顺)
+【禁忌】不用"赋能/抓手/闭环/底层逻辑"等词;不要排比句;不要空话结尾
+【交付】先读工作目录素材库的口径文件;成稿自查时间地点数字;存到「成稿」文件夹并给我全文"></div>
+
+  <div class="tipbox">💡 <b>压箱底技巧:让它先问后写。</b>信息不全时别硬写,在交办单末尾加一句——<b>「先别动笔,把你还缺的信息列出来问我,问齐了再写」</b>。AI 最大的毛病是"不懂装懂瞎编数字",这一句专治。</p>
+
+  <div class="notebox">🔬 <b>名词急救站:</b><b>提示词(Prompt)</b> = 你发给 AI 的那段话,即"交办单"。写提示词的功夫俗称"提示词工程",听着玄乎,本质就是把交办单写规范——本章就是全部秘诀。</div>
+</section>
+
+<!-- ══════════ 第七章 ══════════ -->
+<section class="chap" id="c6">
+  <div class="chap-head"><div class="chap-no">柒</div><h2>Skill——给文秘的一页操作手册</h2></div>
+  <div class="chap-sub">本章任务:搞懂 Skill 是什么、放哪、怎么装、坏了怎么查。</div>
+
+  <p class="lead">没有技能时,每写一份公文你都要口头叮嘱一遍:先问要素、查口径、别用 AI 腔、写完自查……——像不像每次都要给新来的实习生重新交代一遍?<b>技能(Skill)就是把这套叮嘱写成一张纸,贴在它工位上,以后自动照办。</b></p>
+
+  <h3>一个技能,就是一个文件夹</h3>
+  <p>技能在电脑上朴素得惊人:<b>一个文件夹 + 一个叫 SKILL.md 的文本文件</b>。里面写着这套工作的操作步骤、格式规范、禁用词。dsh 启动时会扫描几个固定位置,发现 SKILL.md 就自动"学会"——你写公文时一开口,它就把对应手册翻开照着做。</p>
+  <pre class="tree">公文写作\                        <span class="anno">← 你第五章选的工作目录</span>
+├─ <span class="dir">.dsh\
+│   └─ <span class="dir">skills\</span>                  <span class="anno">← 技能统一住这(推荐)</span>
+│       ├─ <span class="skl">gongwen-tongzhi\SKILL.md</span>   <span class="anno">→ 通知手册</span>
+│       ├─ <span class="skl">gongwen-qingshi\SKILL.md</span>   <span class="anno">→ 请示手册</span>
+│       └─ <span class="skl">gongwen-aiwei\SKILL.md</span>     <span class="anno">→ 去AI味审校手册</span>
+├─ <span class="dir">素材库\</span>                      <span class="anno">← 第九章建</span>
+└─ <span class="dir">成稿\</span>                        <span class="anno">← 它写完的文件存这</span></pre>
+
+  <h3>SKILL.md 的解剖图</h3>
+  <p>文件分上下两段,像一张规范表单的"表头 + 正文":</p>
+  <div class="cmd" style="white-space:pre-wrap"><span class="c-cmt">---</span>
+<span class="c-kw">name:</span> gongwen-tongzhi        <span class="c-cmt"># 必填:技能名,小写字母+连字符(kebab-case)</span>
+<span class="c-kw">description:</span> 起草规范通知的完整流程   <span class="c-cmt"># 必填:一句话说明,靠它 AI 才知道何时翻这本手册</span>
+<span class="c-kw">whenToUse:</span> 当用户要求起草通知时      <span class="c-cmt"># 选填:进一步说明适用场合</span>
+<span class="c-cmt">---</span>
+
+<span class="c-fn"># 起草「通知」操作手册</span>
+(下面就是正文:角色、流程、格式、禁忌……想写多细写多细)</div>
+
+  <table class="tbl">
+    <tr><th>表头字段</th><th>必须?</th><th>规则(三条违反任一条,技能会<b>静默失效</b>!)</th></tr>
+    <tr><td>name</td><td class="no">必填</td><td>只能小写字母、数字和连字符:如 gongwen-tongzhi ✓,gongwen_tongzhi ✗,公文通知 ✗</td></tr>
+    <tr><td>description</td><td class="no">必填</td><td>一句话讲清"这本手册管什么",AI 靠它决定何时翻开</td></tr>
+    <tr><td>whenToUse</td><td class="yes">选填</td><td>补充"什么场合用",写上更保险</td></tr>
+  </table>
+  <div class="warnbox">⚠️ <b>头三行陷阱(集体踩过):</b>① 冒号后要有<b>一个空格</b>;② 缩进用空格<b>别用 Tab</b>;③ 头尾的三个减号 <b>---</b> 一个都不能少。这三条踩了任何一条,dsh 不会报错——手册<b>悄悄从书架上消失</b>,你以为装好了其实没生效。装完必须验证(方法见本章末)。</div>
+
+  <h3>装技能,三种方法</h3>
+  <div class="step">
+    <div class="step-no">A</div>
+    <div class="step-body">
+      <b>最省事:让 dsh 自己装(强烈推荐)。</b>把第八章的技能全文复制,粘贴到工作台输入框,配上一句话:<br>
+      <div class="cmd" data-copy>把下面这份技能装进我的技能目录(路径:工作目录下 .dsh/skills/),装完告诉我技能名,并教我如何验证它已生效:</div>
+      它会自己建文件夹、建文件——这活儿它最擅长。8 个技能挨个发一遍就装齐了。
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-no">B</div>
+    <div class="step-body">
+      <b>手动装(记事本法)。</b>在工作目录下依次新建文件夹:.dsh → skills → gongwen-tongzhi;打开记事本粘贴技能全文,「另存为」到 gongwen-tongzhi 文件夹,文件名 <b>"SKILL.md"</b>(带引号防 .txt 后缀),编码 UTF-8。<br>
+      <span class="s-fix"><b>🍎 macOS:</b>终端里 cd 到工作目录,mkdir -p .dsh/skills/gongwen-tongzhi 后用任意文本编辑器存入。</span>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-no">C</div>
+    <div class="step-body">
+      <b>社区导入插件。</b>dsh 生态有「dsh-skill-import」插件,装好后工作台输入框旁会多一个「+ → 导入/管理 Skill」入口,填技能文件夹路径即可。会装插件后再玩,新手先走 A 法。
+    </div>
+  </div>
+
+  <h3>装完必验:两个动作</h3>
+  <p><b>① 主动点名:</b>在输入框直接敲 <b>/gongwen-tongzhi</b>(斜杠 + 技能名),回车——它会翻开这本手册干活。<b>② 问一句:</b>「你现在都有哪些技能?」——它会列出技能清单,装好的都在上面。</p>
+  <div class="tipbox">💡 <b>技能放哪,按这个优先级:</b>工作目录级(公文写作\.dsh\skills\)推荐——跟着你的"办公室"走,拷走整个文件夹就等于带走全部技能;<b>个人级</b>(C:\Users\你的名字\.dsh\skills\)全机器通用但换电脑要重装。教程统一用工作目录级。</div>
+  <div class="notebox">🔬 <b>名词急救站:</b><b>SKILL.md</b> = 技能手册的标准文件名;<b>kebab-case</b> = 命名风格"小写字母用连字符串起来",因形似烤肉串得名;/gongwen-tongzhi = 用斜杠"点名"让 AI 翻开某本手册。</div>
+</section>
+
+<!-- ══════════ 第八章 ══════════ -->
+<section class="chap" id="c7">
+  <div class="chap-head"><div class="chap-no">捌</div><h2>六个公文技能包——拿来就能装</h2></div>
+  <div class="chap-sub">每个技能 = 一份完整 SKILL.md(📋 一键复制)+ 适用说明 + 一篇范文</div>
+
+  <p class="lead">下面六个技能覆盖机关和单位最常用的文种。每个技能都内置了同一套功夫:<b>先读你的素材库 → 缺信息先问 → 按格式成文 → 自查三遍(含 AI 味)</b>。安装方法用第七章的 A 法:复制 SKILL.md 全文发给 dsh,说"帮我装进技能目录",挨个来。</p>
+
+  <h3>先辨文种,再翻手册</h3>
+  <table class="tbl">
+    <tr><th>文种</th><th>行文方向</th><th>干什么用</th><th>一句话口诀</th></tr>
+    <tr><td><b>通知</b></td><td>下行(发给下级/全员)</td><td>告知事项 + 提出要求</td><td>「知且行」</td></tr>
+    <tr><td><b>请示</b></td><td>上行(发给上级)</td><td>请求批准一件事(要钱要人要政策)</td><td>「事前请示,一文一事」</td></tr>
+    <tr><td><b>报告</b></td><td>上行</td><td>汇报工作/反映情况,<b>不需要批复</b></td><td>「只汇报,不索取」</td></tr>
+    <tr><td><b>会议纪要</b></td><td>内部/相关方</td><td>记录会议议定的事项</td><td>「会上定的,白纸黑字」</td></tr>
+    <tr><td><b>函</b></td><td>平行(不相隶属单位)</td><td>商洽工作、询问、答复</td><td>「平级商量,客气不命令」</td></tr>
+    <tr><td><b>讲话稿</b></td><td>会议现场</td><td>领导口头讲话用稿</td><td>「念得顺才算数」</td></tr>
+  </table>
+  <div class="tipbox">💡 <b>最容易混的两对:</b>① 请示 vs 报告——<b>要批复用请示,纯汇报用报告</b>,报告里夹带请示事项是大忌;② 通知 vs 函——<b>有隶属关系用通知,平级不相隶属用函</b>。拿不准时,把这句话直接发给 dsh 问它:「我该用请示还是报告?情况是……」——六本手册都没命中时,它会帮你判断。</div>
+
+  <h3 id="s7-1">技能一 · 通知 <span style="font-family:var(--mono);font-size:.7em;color:var(--muted)">gongwen-tongzhi</span></h3>
+  <p><span class="yaoling">下行文</span><span class="yaoling">告知 + 要求</span> 部署工作、安排会议、组织活动、事务告知,都是它。口诀「知且行」:让人知道,还要人照办。</p>
+  <div class="skill-card">
+    <div class="skill-head"><span>gongwen-tongzhi / SKILL.md</span><span class="hint">整段复制 → 发给 dsh 安装</span></div>
+    <pre class="skill-src" data-copy><span class="fm">---
+name: gongwen-tongzhi
+description: 起草规范的通知类公文(工作部署、会议、活动、事务告知),自动引用素材库口径,内置格式自查与去AI味检查。
+whenToUse: 当用户要求起草、修改"通知"时使用,包括培训通知、会议通知、活动通知、事务性通知。
+---</span>
+
+<span class="md"># 起草「通知」操作手册</span>
+
+## 你的角色
+你是本单位办公室从事文字工作十五年的老文秘,起草通知从不返工,语言庄重、信息扎实。
+
+## 工作流程(严格按顺序执行)
+1. 【查家底】动笔前,先读工作目录下「素材库/」文件夹:
+   - 单位口径.txt(机构全称简称、规范称谓)
+   - 常用落款.txt(落款单位、联系人写法)
+   素材库里有的口径一律照用;素材库不存在就跳过,并在成稿末尾提醒用户建立素材库。
+2. 【补要素】对照下方要素清单检查用户给的信息,缺什么先一次性问齐,不要挤牙膏。
+3. 【起草】按格式规范成文。
+4. 【自查】逐条过"发稿前三查",过了才算成稿。
+5. 【交付】全文写入「成稿/」文件夹,文件名:YYYY-MM-DD-通知-主题.md;同时在对话里给出全文。
+
+## 要素清单(缺一项问一项)
+发文单位 / 主送对象(各部门、各社区、全体人员?)/ 事由(一句话说清通知什么)/ 时间与地点(如有活动)/
+参加人员与具体要求(带什么、着装、提前多久到)/ 联系人及电话 / 是否需要报名回执及截止时间 / 落款日期 / 字数与特殊要求。
+
+## 格式规范
+- 标题:发文单位 + 事由 + 文种,如《××街道办关于开展防汛应急演练的通知》
+- 主送对象另起一行顶格写,后加冒号
+- 正文三段式:缘由(为什么发)→ 事项(分条列项,"一、二、三",一条一事)→ 要求(如何贯彻落实)
+- 结尾用规范语:"特此通知"
+- 落款:单位规范全称 + 成文日期(与素材库一致)
+
+## 语言要求(公文语体)
+- 只陈述事实与要求,不抒情、不议论、不喊口号
+- 短句,动词开头:现将、请于、请务必
+- 每句话必须带实际信息:时间、地点、人名、数字、要求,五者至少占其一
+
+## 发稿前三查
+1. 查要素:时间地点联系人齐全,数字准确,称呼规范
+2. 查口径:单位名称与称谓与素材库一致
+3. 查AI味:全文检索并消灭——赋能、抓手、闭环、底层逻辑、维度、协同推进、
+   持续发力、走深走实、排比三连句、"首先/其次/最后"框架、展望式空话结尾。
+   发现一处改一处,并在自查报告里说明改了什么。</pre>
+  </div>
+
+  <div class="doc">
+    <div class="doc-head">附 · 参考范文(此篇贯穿全文的防汛演练通知,终稿在第十三章)</div>
+    <div class="doc-body">
+      <h5>××街道办事处关于开展防汛应急演练的通知</h5>
+      <p class="recv">各社区居委会:</p>
+      <p>为检验街道防汛应急预案的可操作性,提升社区干部应急处置能力,经街道党工委研究,定于近期组织开展防汛应急演练。现将有关事项通知如下:</p>
+      <p>一、演练时间:6月12日(星期五)上午9:00,8:50前完成签到。</p>
+      <p>二、演练地点:街道文体中心(××路41号)。</p>
+      <p>三、参加人员:各社区主任带队,每社区应急队员不超过6人。</p>
+      <p>四、有关要求:请携带对讲机并统一着马甲;演练期间服从现场调度,注意自身安全。</p>
+      <p>五、请各社区于6月10日17:00前将参演人员名单报街道应急办王倩处(联系电话:5xx-xxxx)。</p>
+      <p class="zc">特此通知。</p>
+      <p class="sign">××街道办事处<br>2026年6月5日</p>
+    </div>
+  </div>
+
+  <h3 id="s7-2">技能二 · 请示 <span style="font-family:var(--mono);font-size:.7em;color:var(--muted)">gongwen-qingshi</span></h3>
+  <p><span class="yaoling">上行文</span><span class="yaoling">请求批准</span> 向上级要钱、要人、要政策,事前行文。铁律三条:<b>一文一事、不得多头主送、不得越级</b>。</p>
+  <div class="skill-card">
+    <div class="skill-head"><span>gongwen-qingshi / SKILL.md</span><span class="hint">整段复制 → 发给 dsh 安装</span></div>
+    <pre class="skill-src" data-copy><span class="fm">---
+name: gongwen-qingshi
+description: 起草向上级机关请求批准事项的"请示"公文,严守一文一事、事前行文等铁律,引用素材库口径。
+whenToUse: 当用户要求起草、修改"请示"时使用;向上级要经费、要人员、要政策支持的场合。
+---</span>
+
+<span class="md"># 起草「请示」操作手册</span>
+
+## 你的角色
+你是十五年工龄的老文秘,深知请示写得好,事情批得快;写得含糊,领导批不了。
+
+## 工作流程
+1. 【查家底】先读「素材库/」的口径与落款文件(同通知技能)。
+2. 【守铁律】起草前自查三条:这件事是<b>一件</b>事吗(一文一事)?是<b>事前</b>请示吗(还没办、还没买就要批)?
+   主送上级是<b>谁</b>(只有一个直属上级)?违反任何一条,先向用户指出并商量改法。
+3. 【补要素】缺信息一次性问齐:请示缘由背景、请示事项的具体内容(金额、数量、时限)、可选方案。
+4. 【起草】【自查】【交付】流程同通知技能:成稿/ 文件夹,文件名 YYYY-MM-DD-请示-主题.md。
+
+## 格式规范
+- 标题:《××关于××的请示》
+- 主送机关:顶格写<b>唯一</b>的直属上级机关名称,后加冒号
+- 正文三段式:
+  一、请示缘由:摆背景、讲必要、说紧迫,实事求是,数字支撑
+  二、请示事项:要什么写什么——金额精确到元、人数精确到个、时限精确到日,让领导能"批得下手"
+  三、结语:规范用语"妥否,请批示。"或"以上请示,请予审批。"
+- 落款:单位规范全称 + 日期
+
+## 语言要求
+- 陈述式,惯用"拟""恳请""特此请示"
+- 缘由部分有理有据不夸大;事项部分干净利落不绕弯
+
+## 发稿前三查
+1. 查铁律:一文一事?单一主送?事前行文?
+2. 查可批性:事项是否具体到领导签一个字就能办
+3. 查AI味 + 查口径:同通知技能的第三查,逐条执行</pre>
+  </div>
+
+  <div class="doc">
+    <div class="doc-head">附 · 参考范文</div>
+    <div class="doc-body">
+      <h5>××街道办事处关于申请拨付老旧小区改造前期费用的请示</h5>
+      <p class="recv">××区人民政府:</p>
+      <p>我街道幸福里小区已列入2026年老旧小区改造计划,涉及12栋楼、居民476户。根据区住建局6月3日专题会议要求,须于7月10日前完成入户调查、房屋安全鉴定与设计方案编制等前期工作。</p>
+      <p>经初步询价,上述前期工作共需费用286,000元,其中入户调查外包费36,000元、房屋安全鉴定费180,000元、方案设计费70,000元。目前前期经费尚无来源,为保证按期启动,恳请区政府予以拨付。</p>
+      <p>妥否,请批示。</p>
+      <p class="sign">××街道办事处<br>2026年6月9日</p>
+    </div>
+  </div>
+
+  <h3 id="s7-3">技能三 · 报告 <span style="font-family:var(--mono);font-size:.7em;color:var(--muted)">gongwen-baogao</span></h3>
+  <p><span class="yaoling">上行文</span><span class="yaoling">汇报情况</span> 向上级汇报工作、反映情况、答复询问——<b>不需要批复</b>。最大禁忌:报告里夹带请示。</p>
+  <div class="skill-card">
+    <div class="skill-head"><span>gongwen-baogao / SKILL.md</span><span class="hint">整段复制 → 发给 dsh 安装</span></div>
+    <pre class="skill-src" data-copy><span class="fm">---
+name: gongwen-baogao
+description: 起草向上级汇报工作、反映情况、答复询问的"报告"公文,用数据说话,严禁夹带请示事项。
+whenToUse: 当用户要求起草、修改"报告"时使用;季度总结汇报、专项情况报告、答复上级询问的场合。
+---</span>
+
+<span class="md"># 起草「报告」操作手册</span>
+
+## 你的角色
+你是老文秘,深知上级看报告只看两样:数据真不真,问题藏没藏。
+
+## 工作流程
+1. 【查家底】先读「素材库/」口径与落款(同通知技能)。
+2. 【定类型】先确认是哪一种:工作报告(阶段/综合)、情况报告(专项)、
+   答复报告(回复上级询问)。类型不明先问用户。
+3. 【补要素】缺什么问什么:报告主题、时间段、关键数据与来源、存在问题、下一步安排。
+4. 【起草】【自查】【交付】流程同通知技能,存「成稿/YYYY-MM-DD-报告-主题.md」。
+
+## 格式规范
+- 标题:《××关于××的报告》
+- 主送:上级机关,顶格
+- 正文经典结构:
+  一、基本情况/总体概述(一两百字说完全貌)
+  二、主要做法与成效(分条,每条"做法+数据")
+  三、存在问题(如实写,不遮不掩)
+  四、下一步工作打算(分条,落到动作)
+- 结语:规范用语"特此报告。"
+- 落款:单位规范全称 + 日期
+
+## 语言要求
+- 汇报体,靠数字说话:处理量、办结率、增长率,能写绝对数就写绝对数
+- 成绩不吹、问题不藏、动词朴实:开展、完成、处理、整改
+
+## 铁律与发稿前三查
+0. 铁律:报告<b>不得</b>夹带请示事项,结尾不得出现"请批示"——写完先自查这条!
+1. 查数据:每个数字有来源(用户提供或素材库),用户没给的数字必须先问,严禁编造
+2. 查结构:四段是否齐全、每条是否有信息量
+3. 查AI味 + 查口径:同通知技能的第三查</pre>
+  </div>
+
+  <div class="doc">
+    <div class="doc-head">附 · 参考范文(节选)</div>
+    <div class="doc-body">
+      <h5>××街道办事处关于一季度12345热线诉求办理情况的报告</h5>
+      <p class="recv">××区人民政府办公室:</p>
+      <p>现将我街道2026年一季度12345政务服务热线诉求办理情况报告如下。</p>
+      <p>一季度,我街道共承接热线诉求143件,按期办结143件,按期办结率100%;平均办结时长2.1天,较去年同期缩短3.1天。诉求集中在物业管理(46件)、市容环境(38件)、邻里纠纷(22件)三类,合计占74.8%。</p>
+      <p>主要做法:一、实行"接单即办"责任制,每个工单明确一名社区干部为责任人;二、对物业类诉求实行"社区吹哨、部门报到",一季度联合房管所现场处置9次;三、每周五对未结工单逐件过堂。</p>
+      <p>存在问题:一是老旧小区停车纠纷化解率偏低,一季度同类投诉重复出现11件;二是社区调解力量不足,2名调解员承担全部邻里纠纷工单。</p>
+      <p>下一步,拟于4月中旬前制定老旧小区停车管理办法试点方案,并商区司法局增配专职调解员1名。</p>
+      <p class="zc">特此报告。</p>
+      <p class="sign">××街道办事处<br>2026年4月3日</p>
+    </div>
+  </div>
+
+  <h3 id="s7-4">技能四 · 会议纪要 <span style="font-family:var(--mono);font-size:.7em;color:var(--muted)">gongwen-jiyao</span></h3>
+  <p><span class="yaoling">内部文</span><span class="yaoling">记录议定</span> 输入往往是一堆乱糟糟的会议记录,你的技能要把它整理成"会上定了什么、谁去办、何时办结"的白纸黑字。</p>
+  <div class="skill-card">
+    <div class="skill-head"><span>gongwen-jiyao / SKILL.md</span><span class="hint">整段复制 → 发给 dsh 安装</span></div>
+    <pre class="skill-src" data-copy><span class="fm">---
+name: gongwen-jiyao
+description: 把用户提供的(可能凌乱的)会议记录整理成规范会议纪要,忠实原意,落实责任人与时限。
+whenToUse: 当用户提供会议记录、会议笔记并要求整理成"会议纪要"时使用。
+---</span>
+
+<span class="md"># 起草「会议纪要」操作手册</span>
+
+## 你的角色
+你是十五年的老文秘,最大的本事是:记录多乱都能理清,领导随口说的都能落到责任人。
+
+## 工作流程
+1. 【查家底】先读「素材库/」口径(同通知技能)。
+2. 【对信息】核对基本信息,缺了就问:会议名称、时间、地点、主持人、出席人员及职务、记录人。
+3. 【守忠实原则】只整理记录里<b>有</b>的内容:不添加观点、不编造发言、不替领导"补充发挥"。
+   记录含糊或矛盾的地方,原样标注"(待核实)",提醒用户确认,绝不自行脑补。
+4. 【起草】按格式规范成文。
+5. 【自查】【交付】流程同通知技能,存「成稿/YYYY-MM-DD-纪要-会议主题.md」。
+
+## 格式规范
+- 标题:会议名称 + 纪要,如《××街道老旧小区改造专题会议纪要》
+- 首段(一段话说清):×年×月×日,××在××主持召开了××会议,×××、×××出席,会议围绕……进行了研究。
+- 主体按议题分"一、二、三",每个议题三层:
+  会议认为/会议指出(讨论情况,简)
+  会议决定(议定事项,明确)
+  责任人 + 完成时限(议定的事必须落实到人、到日期)
+- 尾段(如有):会议强调的工作要求
+
+## 语言要求
+- 概括提炼,多用惯用语:会议认为、会议指出、会议决定、会议要求、会议强调
+- 短句为主,一议一议分开写
+
+## 发稿前三查
+1. 查忠实:有没有任何一句不是用户记录里有的?有就删掉或标注(待核实)
+2. 查落实:每件议定事项是否都有责任人和时限
+3. 查AI味 + 查口径 + 查人名职务:同通知技能的第三查;人名职务逐一对照素材库</pre>
+  </div>
+
+  <div class="doc">
+    <div class="doc-head">附 · 参考范文</div>
+    <div class="doc-body">
+      <h5>××街道老旧小区改造专题会议纪要</h5>
+      <p>2026年6月3日(星期三)下午,街道办事处主任张××在三楼会议室主持召开老旧小区改造专题会议,副主任李××、城建科科长王××、幸福里社区主任刘××等出席。会议听取了前期排查情况汇报,研究了下一步工作安排,纪要如下:</p>
+      <p>一、关于入户排查。会议认为,幸福里小区排查摸底是改造设计的前提,必须先行。会议决定:由幸福里社区牵头,6月10日前完成12栋楼入户排查登记表回收;各社区参照执行,报名单截止时间同步为6月10日。</p>
+      <p>二、关于房屋安全鉴定。会议决定:由城建科负责,6月15日前完成鉴定机构比选并签订委托合同,费用按合同约定支付。</p>
+      <p>三、关于宣传物料经费。会议同意拨付幸福里社区宣传物料费20,000元,由财务科按程序办理支付。</p>
+      <p>会议要求,以上事项落实情况由街道办公室于6月20日汇总报张××主任。</p>
+    </div>
+  </div>
+
+  <h3 id="s7-5">技能五 · 函 <span style="font-family:var(--mono);font-size:.7em;color:var(--muted)">gongwen-han</span></h3>
+  <p><span class="yaoling">平行文</span><span class="yaoling">商洽询问</span> 和不相隶属的单位打交道:商借场地、询问情况、答复事项。<b>平级商量事,客气不命令。</b></p>
+  <div class="skill-card">
+    <div class="skill-head"><span>gongwen-han / SKILL.md</span><span class="hint">整段复制 → 发给 dsh 安装</span></div>
+    <pre class="skill-src" data-copy><span class="fm">---
+name: gongwen-han
+description: 起草与不相隶属单位之间商洽工作、询问情况、答复事项的"函",语气平和恳切。
+whenToUse: 当用户要求起草、修改"函"时使用;商借场地、请求协助、答复外单位询问等平级往来场合。
+---</span>
+
+<span class="md"># 起草「函」操作手册</span>
+
+## 你的角色
+你是老文秘,深谙"函"的分寸:既是公对公,又是求人办事——字要客气,事要说清。
+
+## 工作流程
+1. 【查家底】先读「素材库/」口径(同通知技能)。
+2. 【辨方向】先确认是哪一种:商洽函(请对方办事)、询问函(问情况)、答复函(回复对方的函)。
+   方向不明先问用户。
+3. 【补要素】缺什么问什么:对方单位规范全称、事由与需求、我方希望对方做什么、时限、我方联系人。
+4. 【起草】【自查】【交付】流程同通知技能,存「成稿/YYYY-MM-DD-函-主题.md」。
+
+## 格式规范
+- 标题:《××关于××的函》
+- 主送:对方单位规范全称,顶格
+- 正文三段式:
+  一、缘由:为什么发这封函,一两句讲清背景
+  二、事项:请对方做什么/答复什么,具体明确
+  三、结语(按类型选):
+     商洽类:"望予支持为盼。"或"如蒙同意,请予函复。"
+     询问类:"请予函复。"
+     答复类:"特此函复。"
+- 落款:单位规范全称 + 日期(有的单位函只盖公章不落款,以素材库口径为准)
+
+## 语言要求
+- 平和、恳切、礼貌,但不卑不亢
+- 用"商请""恳请""盼予"等敬语;不用命令语气,不写"必须""务必"
+- 平级往来,不摆上下级腔,也不打官腔
+
+## 发稿前三查
+1. 查对象:对方单位全称是否准确(问用户或查素材库,不猜)
+2. 查事项:对方要做的事是否具体可行
+3. 查AI味 + 查语气:同通知技能的第三查;另查全文有无命令式语气,有则改</pre>
+  </div>
+
+  <div class="doc">
+    <div class="doc-head">附 · 参考范文</div>
+    <div class="doc-body">
+      <h5>××街道办事处关于商请共享停车资源的函</h5>
+      <p class="recv">××中学:</p>
+      <p>我街道幸福里小区建成于1998年,未配建地下车库,夜间居民停车矛盾突出,近期12345热线相关投诉持续增加。贵校夜间及节假日校园停车场使用率较低,尚有闲置车位约40个。</p>
+      <p>为缓解居民夜间停车难问题,我街道拟商请贵校在夜间(19:00至次日7:00)及节假日向幸福里小区居民开放部分车位,由我街道协助做好车辆登记与管理,相关管理费用承担方式可另行协商。</p>
+      <p>望予支持为盼。如蒙同意,请予函复,我街道将派员对接具体事宜。联系人:刘××,电话:5xx-xxxx。</p>
+      <p class="sign">××街道办事处<br>2026年5月20日</p>
+    </div>
+  </div>
+
+  <h3 id="s7-6">技能六 · 讲话稿 <span style="font-family:var(--mono);font-size:.7em;color:var(--muted)">gongwen-jianghuagao</span></h3>
+  <p><span class="yaoling">口头稿</span><span class="yaoling">念得顺才算数</span> 和书面公文完全是两种呼吸:书面稿给人看,讲话稿给人听。判稿标准只有一条——<b>拿起来念一遍,顺不顺</b>。</p>
+  <div class="skill-card">
+    <div class="skill-head"><span>gongwen-jianghuagao / SKILL.md</span><span class="hint">整段复制 → 发给 dsh 安装</span></div>
+    <pre class="skill-src" data-copy><span class="fm">---
+name: gongwen-jianghuagao
+description: 起草领导在各类会议上的讲话稿(动员、部署、总结),口语化、念得顺,事例落地。
+whenToUse: 当用户要求起草、修改"讲话稿""发言稿""致辞"时使用。
+---</span>
+
+<span class="md"># 起草「讲话稿」操作手册</span>
+
+## 你的角色
+你是给领导写了十五年讲话稿的老笔杆,深知稿子的唯一检验标准:领导念得顺,听众坐得住。
+
+## 工作流程
+1. 【查家底】先读「素材库/」口径(同通知技能)。
+2. 【问场合】起草前必须问清:讲话人姓名职务、什么会议什么场合、对谁讲、讲多久
+   (3分钟约800字,5分钟约1400字,10分钟约2800字)、讲话人风格(严肃庄重?喜欢带点口语?)。
+3. 【要素材】主动向用户要"具体事例":最近发生的事、点名的人、真实数据。
+   用户一时给不出,就先留【此处补充事例:××】占位,成稿时提醒,严禁编造点名道姓的事例。
+4. 【起草】【自查】【交付】流程同通知技能,存「成稿/YYYY-MM-DD-讲话稿-主题.md」。
+
+## 结构模板(可按场合伸缩)
+- 开头:称呼("同志们"或按对象)+一两句点题,不铺垫过长
+- 主体:三个部分左右,每部分按"提出观点 → 摆事例或数据 → 提出要求"展开
+- 结尾:号召落在具体动作——要求谁、何时、做成什么,不喊空口号
+
+## 语言要求(与书面公文最大的不同)
+- 口语化:用"大家""同志们""我说三点""说白了"等口头语,句子短
+- 念得顺:每句原则上不超过25字,拗口即改;成稿后自己默念一遍检查
+- 节奏感:长短句交错;排比全篇最多一次,比喻最多一个——多了就是塑料感
+- 事例落地:每部分至少一个真实事例或数据,宁少而真,不编而全
+
+## 发稿前三查
+1. 查时长:按上面的字数对照表核对,误差不超过两成
+2. 查称谓:讲话人职务姓名、听众称谓是否准确(对照素材库)
+3. 查AI味:重点查大词空转、万能展望结尾、连续排比;念一遍,不顺即改</pre>
+  </div>
+
+  <div class="doc">
+    <div class="doc-head">附 · 参考范文(节选,完整实战见第十三章)</div>
+    <div class="doc-body">
+      <h5>在××村人居环境整治动员会上的讲话(节选)</h5>
+      <p>同志们,今天把大家召集起来,就为一件事——环境整治。咱村这次被点了名,脸面上不好看,但丑话说在前头,被点名不丢人,改不了才丢人。</p>
+      <p>我先说怎么干。第一,先把村口的垃圾堆清掉。那个堆了半年的垃圾,明天早上八点,家家出一人,两个小时干完。第二,各家的柴堆草堆,这周五之前收进院里。谁家有困难,找村委,我们组织人搭把手。第三,往后垃圾定点投放,东头西头各设一个桶,每天早上六点半清运,这事由老周负责盯。</p>
+      <p>有人问我,整治是不是刮一阵风。我说,这阵风要刮到底。下个月十五号,我们组织一次检查,哪家门前干净,门口挂红牌;不干净的,我们上门再商量。大家辛苦一个月,换来的是自己住着舒心,客人来了有面子。谢谢大家。</p>
+    </div>
+  </div>
+
+  <div class="tipbox">💡 <b>装齐六本手册后</b>,回到第七章的"验证两动作":问一句「你现在都有哪些技能?」——六个 gongwen-* 加后面第十二章的 gongwen-aiwei,一共七本全在,就大功告成了。</div>
+</section>
+
+<!-- ══════════ 第九章 ══════════ -->
+<section class="chap" id="c8">
+  <div class="chap-head"><div class="chap-no">玖</div><h2>素材库——让文秘记住你的单位</h2></div>
+  <div class="chap-sub">本章任务:花 10 分钟建三个小文件,以后每份公文自动带上你的口径。</div>
+
+  <p class="lead">老文秘的抽屉里都有三样宝贝:<b>一张单位口径表、一页常用落款、一本剪报范文库</b>。AI 文秘也一样——你给它建一次,它每次写公文都先翻抽屉。这正是第 1 章说的"dsh 与网页版"的本质差距:网页版没有抽屉,每单都靠你口头交代。</p>
+
+  <h3>一次建库,终身受益</h3>
+  <p>技能手册的第一步都是"先读素材库",所以库是六本手册的地基。复制这段话发给 dsh(把【】里的内容换成你单位的真实口径):</p>
+  <div class="cmd" style="white-space:pre-wrap" data-copy data-copy-text="帮我在工作目录建一个「素材库」文件夹,里面建三个文件:
+1.「单位口径.txt」——记录我们单位的规范称谓。现在记入:
+   单位全称:【××市××区人民政府××街道办事处】;简称:【××街道办】;
+   上级机关全称:【××区人民政府】;对外常联系单位:【××区住建局、××中学……】;
+   常用规范表述:【"社区居民委员会"不简写为"居委会"】
+2.「常用落款.txt」——记录落款格式:【落款用单位全称;成文日期用阿拉伯数字;联系人格式:姓名+办公电话】
+3. 建一个空的「范文库」文件夹,以后存参考范文。
+建完把三个文件的路径和内容复述给我确认。"></div>
+  <p>它会自己建文件夹、写文件,并把记入的内容复述一遍让你核对。以后口径有变化,直接说人话就行:</p>
+  <div class="cmd" style="white-space:pre-wrap" data-copy data-copy-text="把素材库/单位口径.txt 里,新增一条:今后"网格员"统一改称"网格工作人员"。"></div>
+  <p>看到好范文想攒着,就发给它:</p>
+  <div class="cmd" style="white-space:pre-wrap" data-copy data-copy-text="把下面这篇范文存进 素材库/范文库/,取名为「市级优秀通知范文1」:
+(粘贴范文全文)"></div>
+
+  <div class="flow">
+    <div class="nd"><b>① 你交代口径</b>「把××记进素材库」</div><div class="ar">→</div>
+    <div class="nd"><b>② 写作时自动带上</b>技能第 1 步:先读素材库</div><div class="ar">→</div>
+    <div class="nd"><b>③ 口径永远一致</b>单位名、称谓、落款不再错</div>
+  </div>
+
+  <div class="warnbox">⚠️ <b>素材库的边界:</b>和第一章红线同理——素材库存的是<b>单位规范称谓、格式偏好、公开范文</b>这类"办公室通讯录"级别的信息。<b>不要</b>往里存涉密内容、内部敏感数据、人员隐私。</div>
+  <div class="tipbox">💡 <b>进阶玩法(可选):</b>范文库攒了五六篇后,写公文时可以加一句「写作前先浏览素材库/范文库/里的同类范文,模仿其结构与口吻」——AI 模仿具体范文,远比模仿"通知"这个抽象概念像样。</div>
+</section>
+
+<!-- ══════════ 第十章 ══════════ -->
+<section class="chap" id="c9">
+  <div class="chap-head"><div class="chap-no">拾</div><h2>AI 味门诊——八种症状与处方</h2></div>
+  <div class="chap-sub">本章无操作,是全书"去 AI 味"的总纲。对任何 AI 写的任何文体都有效。</div>
+
+  <p class="lead">什么是"AI 味"?读者说不出哪里不对,但就是觉得<b>不像人写的</b>——那种四平八稳、圆滑漂亮、看完什么也没记住的塑料感。机器为什么有味?三个来源:<b>它读得多写得"平均"</b>(把一亿篇文章的公约数写给你)、<b>它天生讨好</b>(爱夸、爱升华)、<b>它没有你的事实</b>(只能拿空话补位)。下面八种症状,一个一个开药。</p>
+
+  <h3>症状一 · 排比三连 <span class="bing">AI味 🔴 高发</span></h3>
+  <div class="duibi">
+    <div class="dui-bad"><span class="tag">✗ AI 味原句</span><p>这次培训增强了业务本领,提升了服务意识,筑牢了思想防线。</p></div>
+    <div class="dui-good"><span class="tag">✓ 人味改写</span><p>这次培训重点讲了窗口接件材料不全怎么处理,课后全员做了两轮实操考核,不合格的下周补考。</p></div>
+  </div>
+  <p class="dui-why"><b>诊断:</b>排比三连是 AI 的招牌——工整到可疑,且三个短语全是空转。处方:<b>把"增强了什么"落到"解决了什么问题、怎么验证"</b>。公文中偶尔一次排比可以,连发三连必删。</p>
+
+  <h3>症状二 · 大词空转 <span class="bing">AI味 🔴 高发</span></h3>
+  <div class="duibi">
+    <div class="dui-bad"><span class="tag">✗ AI 味原句</span><p>要以数字化转型为抓手,持续赋能基层治理新格局。</p></div>
+    <div class="dui-good"><span class="tag">✓ 人味改写</span><p>本月起,网格员的巡查记录改为手机端填报,纸质台账停用,每周一由网格长在例会上通报填报率。</p></div>
+  </div>
+  <p class="dui-why"><b>诊断:</b>"抓手、赋能、闭环、底层逻辑、新格局"——每个词都高级,连起来什么都没说。处方:<b>问一句"具体做什么、谁做、什么时候做"</b>,答不上来的大词,全部换成动作。</p>
+
+  <h3>症状三 · 框架腔 <span class="bing">AI味 🟡 常见</span></h3>
+  <div class="duibi">
+    <div class="dui-bad"><span class="tag">✗ AI 味原句</span><p>首先,我们要提高认识;其次,我们要强化措施;最后,我们要加强督导。</p></div>
+    <div class="dui-good"><span class="tag">✓ 人味改写</span><p>一、6月10日前完成入户排查;二、排查期间发现的危房隐患,当天报城建科;三、排查情况由街道办汇总通报。</p></div>
+  </div>
+  <p class="dui-why"><b>诊断:</b>"首先其次最后"是作文框架,公文有自己的框架——"一、二、三"分条列项,每条直接以事项或动作起头。框架词几乎可以全部删除。</p>
+
+  <h3>症状四 · 万能展望结尾 <span class="bing">AI味 🔴 高发</span></h3>
+  <div class="duibi">
+    <div class="dui-bad"><span class="tag">✗ AI 味原句</span><p>相信在全体同志的共同努力下,我们必将迎来更加辉煌灿烂的明天!</p></div>
+    <div class="dui-good"><span class="tag">✓ 人味改写</span><p>以上要求,请各社区于5月20日17:00前将落实情况书面报街道办公室。</p></div>
+  </div>
+  <p class="dui-why"><b>诊断:</b>抒情展望在公文里等于零信息。处方:<b>公文的结尾永远是"动作"——谁、何时、交什么</b>。"特此通知""妥否,请批示"这类规范结尾是好的;"必将迎来明天"这类是塑料的。</p>
+
+  <h3>症状五 · 数字虚化 <span class="bing">AI味 🟡 常见</span></h3>
+  <div class="duibi">
+    <div class="dui-bad"><span class="tag">✗ AI 味原句</span><p>整治工作取得显著成效,群众满意度大幅提升。</p></div>
+    <div class="dui-good"><span class="tag">✓ 人味改写</span><p>一季度处理投诉143件,环比下降31%;第三方回访满意度91.2%,比去年四季度提高6.4个百分点。</p></div>
+  </div>
+  <p class="dui-why"><b>诊断:</b>"显著、大幅、进一步"是没带数字的人的遮羞布。处方:<b>形容词的位置让给数字</b>;实在没有数字,就把形容词删掉,只写事实。第十二章的审校技能会强制执行这条。</p>
+
+  <h3>症状六 · 长句裹挟 <span class="bing">AI味 🟡 常见</span></h3>
+  <div class="duibi">
+    <div class="dui-bad"><span class="tag">✗ AI 味原句</span><p>为确保在汛期来临之前将各项准备工作特别是物资储备与人员培训工作落实到位,经研究决定于近期组织开展一次全员参与的应急演练活动。</p></div>
+    <div class="dui-good"><span class="tag">✓ 人味改写</span><p>汛期将近。为把物资储备和人员培训落实到位,近期开展一次全员应急演练。</p></div>
+  </div>
+  <p class="dui-why"><b>诊断:</b>一口气 58 个字,读的人要换气,听的人记不住。处方:<b>按标点拆句,一句一个意思;能删的修饰词("特别是""全员参与的")全删</b>。讲话稿尤其致命——念着念着领导就缺氧。</p>
+
+  <h3>症状七 · 比喻滥用 <span class="bing">AI味 🟢 偶发</span></h3>
+  <div class="duibi">
+    <div class="dui-bad"><span class="tag">✗ AI 味原句</span><p>要让数据多跑路,让群众少跑腿,像春雨般把服务浸润到千家万户,像灯塔般照亮基层治理的航道。</p></div>
+    <div class="dui-good"><span class="tag">✓ 人味改写</span><p>让数据多跑路,让群众少跑腿。本期上线的3项业务,群众在家用手机即可办结,不用再跑窗口。</p></div>
+  </div>
+  <p class="dui-why"><b>诊断:</b>一个比喻是修辞,三个连着是塑料花。处方:<b>全篇最多留一个比喻,其余换成事实</b>。"数据多跑路"这类已经变成通用语的可以留,"春雨""灯塔"这类文学腔删。</p>
+
+  <h3>症状八 · 细节蒸发 <span class="bing">AI味 🔴 本质症状</span></h3>
+  <div class="duibi">
+    <div class="dui-bad"><span class="tag">✗ AI 味原句</span><p>各社区要高度重视,精心组织,扎实推进环境整治工作。</p></div>
+    <div class="dui-good"><span class="tag">✓ 人味改写</span><p>各社区书记为第一责任人。本周五17:00前将整治点位名单(附责任人)报城管科王倩,5xx-xxxx。下周五街道组织交叉检查。</p></div>
+  </div>
+  <p class="dui-why"><b>诊断:</b>这是 AI 味的总根源——<b>没有你的事实,它只能拿"高度重视、精心组织"垫话</b>。处方:谁、何时、何地、何数、打给谁,五件套落地。你会发现:前面七种症状,往往在细节落地的一瞬间自动消失。</p>
+
+  <h3>三句自测口诀</h3>
+  <div class="tipbox">📝 <b>改稿时逐句问三句:</b>① 这句删掉,事情还办得成吗?(办得成 → 删);② 拿起来念,像不像人说话?(不像 → 改);③ 有没有具体的时间、地点、人名、数字、要求?(没有 → 补)。三问全过,基本无味。</div>
+</section>
+
+<!-- ══════════ 第十一章 ══════════ -->
+<section class="chap" id="c10">
+  <div class="chap-head"><div class="chap-no">拾壹</div><h2>公文体与 AI 味——别把该留的也删了</h2></div>
+  <div class="chap-sub">去 AI 味最容易犯的错:矫枉过正,把公文的"实味"也洗掉了。</div>
+
+  <p class="lead">有人一听去 AI 味,就把「现将有关事项通知如下」也删了——错!那是<b>公文的"实味",不是 AI 的"塑料味"</b>。公文体是几代人磨出来的<b>程式语言</b>,像开车要打转向灯:固定动作,不啰嗦,但必须做。两者怎么分?一张表说清:</p>
+
+  <table class="tbl">
+    <tr><th></th><th>公文的实味(必须保留)</th><th>AI 的塑料味(坚决删除)</th></tr>
+    <tr><td><b>长什么样</b></td><td>法定程式用语、分条列项、落款日期</td><td>空洞排比、大词空转、抒情结尾</td></tr>
+    <tr><td><b>判断标准</b></td><td>删了它,<b>格式就残缺</b>(读者觉得不正规)</td><td>删了它,<b>什么都没少</b>(事情照样办)</td></tr>
+    <tr><td><b>例子</b></td><td>特此通知 / 妥否,请批示 / 特此报告 / 会议认为 / 妥善安排</td><td>赋能、抓手、闭环 / 增强了提升了筑牢了 / 必将迎来明天</td></tr>
+  </table>
+
+  <h3>一个万能口诀</h3>
+  <div class="tipbox">🧭 <b>拿不准就问一句:「这句话删掉,事情还办得成吗?」</b><br>① 办得成、且格式不残缺 → 删,它是塑料;<br>② 办得成、但格式残缺(没有"特此通知",通知就像没说完话)→ 留,它是程式;<br>③ 办不成(删了责任人时限就没人落实)→ 不但留,还得加粗盯住。</div>
+
+  <h3>分寸按文种调</h3>
+  <table class="tbl">
+    <tr><th>文种</th><th>程式浓度</th><th>人味空间</th></tr>
+    <tr><td>请示 / 报告</td><td>最浓——规矩是给上级看的尊重</td><td>几乎为零,靠数字和事实撑住"实"</td></tr>
+    <tr><td>通知 / 函</td><td>浓</td><td>事项部分可以写得很干净利落</td></tr>
+    <tr><td>纪要</td><td>中——"会议认为/决定"是骨架</td><td>忠实还原讨论,本身就是人味</td></tr>
+    <tr><td>讲话稿 / 简报</td><td>最淡</td><td>最大——口语、事例、幽默都欢迎</td></tr>
+  </table>
+  <p class="dui-why"><b>一句话总结:</b>庄重的文种,靠"实"压住 AI 味(数字、依据、责任);活泼的文种,靠"人"压住 AI 味(事例、口语、节奏)。两路都比堆形容词强。</p>
+</section>
+
+<!-- ══════════ 第十二章 ══════════ -->
+<section class="chap" id="c11">
+  <div class="chap-head"><div class="chap-no">拾贰</div><h2>去味审校技能——AI 帮 AI 卸妆</h2></div>
+  <div class="chap-sub">第七本手册:专管把 AI 初稿里的塑料味查出来、改下去。</div>
+
+  <p class="lead">六本写作手册是"防",这本是"治"——写完的稿子(不管是 dsh 写的还是你自己写的)都能交给它审一遍。它按第十章的八种症状逐条筛查,输出<b>修改对照表 + 修改后全文</b>,改哪里、为什么改,一目了然。</p>
+
+  <div class="skill-card">
+    <div class="skill-head"><span>gongwen-aiwei / SKILL.md</span><span class="hint">整段复制 → 发给 dsh 安装(第七本)</span></div>
+    <pre class="skill-src" data-copy><span class="fm">---
+name: gongwen-aiwei
+description: 对指定文稿执行"去AI味"七查审校,输出修改对照表与修改后全文,严守公文实味与AI塑料味的边界。
+whenToUse: 当用户要求"审校、修改、去AI味、润色"某份文稿时使用;也适用于审校用户粘贴进来的任何文字。
+---</span>
+
+<span class="md"># 「去 AI 味」审校手册</span>
+
+## 你的角色
+你是机关里最挑剔的核稿人,领导夸过的稿子都被你挑过毛病。你删话狠,但从不误伤公文的规范程式。
+
+## 工作流程
+1. 【读原文】用户会给你:文件路径(去读出来)或直接粘贴的文稿。先完整读一遍。
+2. 【七查】逐条执行下方清单,每发现一处,记录:原句 → 改句 → 一句理由。
+3. 【输出】三部分:
+   一、总体诊断(一句话:这稿的 AI 味重在哪,1-10 打个浓度分)
+   二、修改对照表(每处一行:原句 → 改句 → 理由)
+   三、修改后全文(完整可用版)
+4. 【存档】修改版存入「成稿/」,文件名在原名后加「-已审」。
+
+## 七查清单
+一查排比三连:连续三个"X了Y"结构的排比,只留最有信息量的一句或全部改写为具体事实。
+二查大词空转:赋能、抓手、闭环、底层逻辑、维度、格局、生态、矩阵、持续发力、走深走实——
+   每个都要还原成"谁、做什么、何时做",还原不了就删。
+三查框架腔:"首先/其次/最后""总-分-总"作文腔,改为公文式"一、二、三"分条,删除框架词。
+四查数字虚化:"显著、大幅、进一步、明显"后面没有数字的,补数字;补不了就删形容词。
+五查主语缺失:连串动词无人负责(要重视、要落实、要强化),补上责任主体"谁来做"。
+六查塑料结尾:展望、抒情、口号式结尾,改为动作式收尾(谁、何时、交什么)或规范程式语。
+七查节奏:全稿句子普遍超过25字、段落等长的,拆句、长短交错;改成"拿起来能念顺"。
+
+## 边界铁律(不许误伤)
+以下属于公文实味,一律保留:特此通知/特此报告/妥否,请批示/会议认为/会议决定/
+望予支持为盼/特此函复/规范分条/落款日期。判断口诀:删掉后格式残缺的,是程式;删掉后无损的,是塑料。
+
+## 附加三查(人工把关项,输出时提醒用户)
+1. 念一遍:出声读,不顺即改
+2. 核数字:每个数字与来源核对,AI 改写后的数字必须与原文一致,不得"顺手"改动
+3. 对口径:单位名称、称谓与素材库一致</pre>
+  </div>
+
+  <h3>怎么用</h3>
+  <p>初稿写完后,一句话点名审校:</p>
+  <div class="cmd" data-copy>用去AI味技能审校 成稿/2026-06-05-通知-防汛演练.md,给我修改对照表和修改后全文</div>
+  <p>审校你自己手写的稿子也行——直接粘贴进去,配同一句话。也可以在对话里用 <b>/gongwen-aiwei</b> 显式点名这本手册。</p>
+
+  <div class="warnbox">⚠️ <b>AI 帮 AI 卸妆的一个陷阱:</b>审校时它会顺手"改写润色",偶尔把你的<b>数字或专有名词</b>动了。手册里已写死"不得顺手改动数字"这条,但机器不是圣人——<b>对照表逐行扫一眼改句里的数字和称谓</b>,这是你不可外包的最后一道岗。这就是下一章实战里反复出现的"人肉终审"。</div>
+</section>
+
+<!-- ══════════ 第十三章 ══════════ -->
+<section class="chap" id="c12">
+  <div class="chap-head"><div class="chap-no">拾叁</div><h2>实战三例——把十二页书变成肌肉记忆</h2></div>
+  <div class="chap-sub">三个完整闭环:交办 → 初稿 → 审校 → 人肉终审。每处修改都有理由。</div>
+
+  <h3>实战一 · 通知:从一句口头需求到定稿</h3>
+  <p><b>场景:</b>主任路过你工位,丢下一句「下周搞个防汛演练,你写个通知发各社区」。按第六章把口语翻译成交办单,发给 dsh:</p>
+  <div class="cmd" style="white-space:pre-wrap" data-copy data-copy-text="我是××街道办文秘。起草一份通知:各社区主任带队,6月12日(周五)9:00到街道文体中心参加防汛应急演练,提前10分钟签到,携带对讲机并统一着马甲;联系人王倩 5xx-xxxx,参演名单6月10日17:00前报。标准公文格式,600字以内,语气庄重简洁。先读素材库口径。不用赋能抓手闭环等词,不要排比,不要空话结尾。写完自查时间地点电话,存到成稿文件夹。"></div>
+  <p>初稿三分钟后到手,整体成型,但中间藏了一段典型塑料。假如它写出了这样的话:</p>
+  <div class="duibi">
+    <div class="dui-bad"><span class="tag">✗ 初稿里的塑料段</span><p>此次演练是深入贯彻落实上级防汛工作部署的重要举措,将有效增强各社区应急意识、提升协同处置能力、筑牢汛期安全防线,为建设更高水平的平安街道注入强大动能。</p></div>
+    <div class="dui-good"><span class="tag">✓ 审校后的实味段</span><p>此次演练旨在检验街道防汛应急预案的可操作性。演练设置群众转移、沙袋装填、抽水排涝三个科目,由街道应急办现场评分,成绩纳入各社区年度应急考核。</p></div>
+  </div>
+  <p class="dui-why"><b>诊断(对照表节选):</b>①「深入贯彻落实重要举措」→ 大词空转,删;<b>②</b>「增强、提升、筑牢」三连排比 → 换成三个具体科目;<b>③</b>「注入强大动能」→ 塑料结尾 → 换成"评分 + 纳入考核"的实动作。一段话信息量从 0 变成 3 件事。</p>
+  <p>把审校指令发过去,逐处修正,终稿就是<b>第八章技能一</b>那篇范文——回头翻一眼,那篇里再找不到一句空转的话。全程你的手指只动了三次:交办、审校、核对。</p>
+
+  <h3>实战二 · 纪要:从一页乱账到白纸黑字</h3>
+  <p><b>场景:</b>会开完了,你的记录本上是这样的:</p>
+  <div class="cmd" style="white-space:pre-wrap">周三下午3点 三楼会议室 张主任主持 李主任 王科长 刘主任(幸福里)在
+说了几件事:
+1 老旧小区改造 下月启动 前期要入户排查 让幸福里先弄 报名单截止6月10?还是25?回头我问下
+2 垃圾分类宣传周 下周开始 城管科牵头
+3 经费问题 同意给幸福里2万买宣传物料 财务走流程</div>
+  <p>直接原样扔给 dsh(忠实原则就是为这一刻准备的):</p>
+  <div class="cmd" style="white-space:pre-wrap" data-copy data-copy-text="把下面的会议记录整理成规范会议纪要(用纪要技能)。忠实原意,记录里含糊的地方标注待核实,不要替我补。记录如下:
+(把上面那段乱账原样粘贴)"></div>
+  <p>成稿即第八章技能四那篇纪要——值得学习的是它的<b>两处克制</b>:把「报名单截止6月10?还是25?」写成<b>「报名单截止时间同步为6月10日(待核实)」</b>;把含糊的「经费问题」拆成「同意拨付 20,000 元 + 财务科按程序办理」两件明确的事。<b>宁可留问号,不许编答案</b>——这是好文秘和塑料文秘的分界线。你只需会后补一个电话,把"待核实"定案,文件名去掉(待核实)重存一版。</p>
+
+  <h3>实战三 · 讲话稿:让领导念得顺、坐得住</h3>
+  <p><b>场景:</b>村支书要在环境整治动员会上讲三分钟,你给 dsh 的交办单(注意第六章的技巧——先问后写、要素材):</p>
+  <div class="cmd" style="white-space:pre-wrap" data-copy data-copy-text="起草一篇讲话稿:讲话人××村党支部书记,场合人居环境整治动员会,听众全体村民代表,时长3分钟(约850字),风格直爽接地气。素材我给你:村口垃圾堆半年没人清;下周二区里要来检查;老周管环卫。先别动笔,还缺什么信息列出来问我。"></div>
+  <p>初稿最容易塑料化的是"动员段"。假如它写出了这样一页:</p>
+  <div class="duibi">
+    <div class="dui-bad"><span class="tag">✗ 初稿动员段(塑料)</span><p>同志们!环境整治是一场攻坚战,也是一场持久战。我们要以钉钉子精神,下足绣花功夫,以时不我待的紧迫感、守土有责的使命感、久久为功的坚韧劲,掀起人居环境整治的新高潮,让我们的村庄旧貌换新颜,以崭新的面貌迎接美好的明天!</p></div>
+    <div class="dui-good"><span class="tag">✓ 改后动员段(人味)</span><p>咱村这次被点了名,脸面上不好看。但丑话说在前头,被点名不丢人,改不了才丢人。村口那个垃圾堆,堆了半年,明天早上八点,家家出一人,两个小时干完。</p></div>
+  </div>
+  <p class="dui-why"><b>诊断:</b>① 三重排比(紧迫感使命感坚韧劲)+ 钉钉子绣花功夫双比喻 → 全删,每篇限量;<b>②</b>「新高潮、新面貌、美好的明天」展望三连 → 换成「明天八点,家家出一人」——把口号落到动作,动员才算动员。<b>③</b> 口语信号(咱村、丑话说在前头)让稿子"能念"。</p>
+  <p>改后全文见第八章技能六的节选。三个实战的共同收尾动作都一样:<b>人肉终审三查</b>——出声念一遍(讲话稿必念)、逐个核数字、对口径称谓,然后存档。</p>
+
+  <div class="tipbox">🎓 <b>结业三条:</b>① 先拿低风险文种练手(事务性通知最合适),两三篇就顺手了;② 每篇都走"交办 → 审校 → 人肉终审"三步,缺一步都容易出事;③ 保密红线天天念:涉密不上网,素材库不存敏感信息。做到这三条,AI 就是你的下属,不是你的枪手。</p>
+</section>
+
+<!-- ══════════ 附录 ══════════ -->
+<section class="chap" id="cend">
+  <div class="chap-head"><div class="chap-no">附</div><h2>附录 · 报错急救表与版本说明</h2></div>
+  <div class="chap-sub">出问题先查这张表,90% 的状况三分钟内自愈。</div>
+
+  <h3>报错急救表</h3>
+  <table class="tbl err-tbl">
+    <tr><th>症状 / 报错</th><th>病因</th><th>急救</th></tr>
+    <tr><td>'node' 不是内部或外部命令</td><td>装完 Node 没重开终端;或安装时没勾默认选项</td><td>关掉 PowerShell 重开;不行就重跑 .msi 安装包,一路默认</td></tr>
+    <tr><td>'dsh' 不是内部或外部命令</td><td>没做全局安装</td><td>用长命令 npx @deepseek-ai/dsh web;想短命令就先 npm install -g @deepseek-ai/dsh 再重开终端</td></tr>
+    <tr><td>浏览器打不开 127.0.0.1:3080</td><td>终端里的 dsh 没在跑(窗口关了/Ctrl+C 了)</td><td>回到 PowerShell 重新 dsh web;浏览器没自动开就把终端里带 token 的完整网址复制过去</td></tr>
+    <tr><td>端口被占用</td><td>3080 被别的程序占了</td><td>dsh web --port 8080 换个房间,浏览器开 127.0.0.1:8080</td></tr>
+    <tr><td>401 / invalid api key</td><td>钥匙贴错、多了空格、或没重启</td><td>重开记事本核对 sk- 长码;确认存在 C:\Users\你的名字\.dsh\.env;重启 dsh</td></tr>
+    <tr><td>存了 .env 却不生效</td><td>记事本存成了 .env.txt,或编码不对</td><td>另存时文件名写 ".env"(带引号),类型选"所有文件",编码 UTF-8</td></tr>
+    <tr><td>402 / insufficient balance</td><td>平台余额用完</td><td>回 platform.deepseek.com 充值(10 元够用很久)</td></tr>
+    <tr><td>问「有哪些技能」里没有新装的</td><td>frontmatter 三陷阱或文件名不对</td><td>检查:头尾 --- 俱全、冒号后有空格、name 是 kebab-case、文件名必须叫 SKILL.md(在技能名文件夹里);改完重开对话再问</td></tr>
+    <tr><td>昨天写的稿子找不到了</td><td>翻错了地方</td><td>打开工作目录的「成稿」文件夹;会话记录在左侧会话列表里,本地日志在 C:\Users\你的名字\.dsh\sessions</td></tr>
+    <tr><td>下载/联网特别慢</td><td>网络原因</td><td>关掉重试;错峰安装;公司内网受限就换手机热点试一次</td></tr>
+  </table>
+
+  <h3>七本手册速查卡</h3>
+  <table class="tbl">
+    <tr><th>点名暗号</th><th>管什么</th></tr>
+    <tr><td>/gongwen-tongzhi</td><td>通知:告知 + 要求</td></tr>
+    <tr><td>/gongwen-qingshi</td><td>请示:要批准(一文一事、事前行文)</td></tr>
+    <tr><td>/gongwen-baogao</td><td>报告:只汇报,不夹带请示</td></tr>
+    <tr><td>/gongwen-jiyao</td><td>纪要:忠实记录,落实到人到日</td></tr>
+    <tr><td>/gongwen-han</td><td>函:平级商量,客气不命令</td></tr>
+    <tr><td>/gongwen-jianghuagao</td><td>讲话稿:口语化,念得顺</td></tr>
+    <tr><td>/gongwen-aiwei</td><td>去 AI 味:七查 + 修改对照表</td></tr>
+  </table>
+
+  <h3>版本与更新说明</h3>
+  <p>本文按 <b>2026 年 11 月</b>的公开信息撰写:dsh 处于官方 Developer Preview 阶段(源码 0.1.5-alpha.1,npm 正式通道版本更低),<b>界面细节、命令行为可能随版本调整</b>,以官方仓库 <a href="https://github.com/deepseek-ai/deepseek-harness" target="_blank" rel="noopener">github.com/deepseek-ai/deepseek-harness</a> 与社区文档 <a href="https://deepseekdocs.com" target="_blank" rel="noopener">deepseekdocs.com</a> 为准。若某步对不上,优先核对:① 启动命令是否仍为 dsh web;② 技能目录是否仍为 .dsh/skills;③ SKILL.md 的 name/description 必填规则。这三样是本教程的地基,短期内稳定。</p>
+  <p>本文参考并感谢:DeepSeek 官方开源仓库及其文档;DeepSeek Harness 社区教程站;各位在仓库讨论区分享技能包写法的先行者。</p>
+
+  <div class="endline"></div>
+  <p style="text-align:center;font-family:var(--serif);letter-spacing:4px;color:var(--gold)">— 全 文 完 · 锈 蚀 无 关 · 妙 笔 生 花 —</p>
+</section>
+
+<div class="endline"></div>
+<footer class="foot">
+  文电训练营 · 仅供学习交流 · 涉密不上网<br>
+  参考与更新:官方仓库 github.com/deepseek-ai/deepseek-harness · 社区文档 deepseekdocs.com(2026-11 版本情况见附录)
+</footer>
+
+</main>
+</div>
+
+<button id="toTop" title="返回顶部">↑</button>
+<script src="app.js"></script>
+</body>
+</html>

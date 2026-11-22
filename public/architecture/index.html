@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#173f3a" />
+    <title>架构生长实验室 · Hhuua的自习室</title>
+    <link rel="icon" href="/assets/logo.png">
+    <meta
+      name="description"
+      content="跟着一家虚构小店的成长，用15个阶段、动态架构图和逐步请求演示，学懂从单台服务器到 Kubernetes 的架构演进。"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="course.js"></script>
+    <script defer src="deployment.js"></script>
+    <script defer src="costs.js"></script>
+    <script defer src="request-lab.js"></script>
+    <script defer src="deep-lessons.js"></script>
+    <script defer src="stage-labs.js"></script>
+    <script defer src="one-server-seminar.js"></script>
+    <script defer src="handbook.js"></script>
+    <script defer src="handbook/02-measure.js"></script>
+    <script defer src="handbook/03-database.js"></script>
+    <script defer src="handbook/04-storage.js"></script>
+    <script defer src="handbook/05-cdn.js"></script>
+    <script defer src="handbook/06-balancer.js"></script>
+    <script defer src="handbook/07-cache.js"></script>
+    <script defer src="handbook/08-queue.js"></script>
+    <script defer src="handbook/09-reliability.js"></script>
+    <script defer src="handbook/10-observe.js"></script>
+    <script defer src="handbook/11-services.js"></script>
+    <script defer src="handbook/12-containers.js"></script>
+    <script defer src="handbook/13-kubernetes.js"></script>
+    <script defer src="handbook/14-scaling.js"></script>
+    <script defer src="handbook/15-whole.js"></script>
+    <script defer src="seminar.js"></script>
+    <script defer src="app.js"></script>
+  </head>
+  <body>
+    <a class="skip" href="#lesson">跳到课程内容</a>
+    <aside id="sidebar" class="sidebar" aria-label="课程路线"></aside>
+    <div id="mobileShade" class="mobile-shade"></div>
+    <div class="workspace">
+      <nav class="study-bar" aria-label="自习室导航"><a class="shelf-back" href="/"><span aria-hidden="true">←</span> 返回专题书架</a><a class="study-brand" href="/"><img width="28" height="28" src="/assets/logo.png" alt="">Hhuua的自习室</a></nav>
+      <header class="topbar">
+        <button
+          id="menuButton"
+          class="icon-button mobile-menu"
+          aria-label="打开课程目录"
+        >
+          ☰
+        </button>
+        <div class="course-heading">
+          <div class="crumb">
+          青屿小店的成长记录 <span>/</span> <span id="currentCrumb"></span>
+          </div>
+        </div>
+        <div class="top-actions">
+          <button id="overviewButton" class="text-button">完整结构图</button
+          ><span class="edition">资料核对 2026.11.11</span>
+        </div>
+      </header>
+      <main id="lesson" tabindex="-1"></main>
+      <footer class="site-footer">
+        <span>架构生长实验室</span
+        ><span>虚构业务 · 规模与实验数值为教学假设 · 技术资料附原文</span>
+      </footer>
+    </div>
+    <div id="toast" class="toast" role="status"></div>
+  </body>
+</html>
